@@ -1,0 +1,71 @@
+<p-card header="Todo List" styleClass="todo-card">
+  <!-- Todo Form -->
+  <div class="todo-form">
+    <p-inputGroup>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newTodoTitle"
+        placeholder="Enter a new todo..."
+        (keydown.enter)="onAddTodo()"
+        class="todo-input"
+      />
+      <button
+        pButton
+        type="button"
+        icon="pi pi-plus"
+        label="Add"
+        (click)="onAddTodo()"
+        [disabled]="!newTodoTitle.trim()"
+      ></button>
+    </p-inputGroup>
+  </div>
+
+  <!-- Todo List -->
+  <div class="todo-list">
+    @for (todo of todos$ | async; track todo.id) {
+    <div class="todo-item" [class.completed]="todo.completed">
+      <p-checkbox
+        [(ngModel)]="todo.completed"
+        [binary]="true"
+        (onChange)="onToggleTodo(todo.id)"
+      ></p-checkbox>
+
+      @if (editingTodoId === todo.id) {
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="editingTitle"
+        (keydown)="onEditKeydown($event, todo.id)"
+        (blur)="onSaveEdit(todo.id)"
+        class="edit-input"
+        autofocus
+      />
+      } @else {
+      <span
+        class="todo-title"
+        [class.completed-text]="todo.completed"
+        (dblclick)="onStartEdit(todo)"
+      >
+        {{ todo.title }}
+      </span>
+      }
+
+      <button
+        pButton
+        type="button"
+        icon="pi pi-trash"
+        severity="danger"
+        [text]="true"
+        (click)="onDeleteTodo(todo.id)"
+        class="delete-btn"
+      ></button>
+    </div>
+    } @empty {
+    <div class="empty-state">
+      <i class="pi pi-inbox"></i>
+      <p>No todos yet. Add one above!</p>
+    </div>
+    }
+  </div>
+</p-card>
