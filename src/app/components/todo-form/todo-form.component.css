@@ -1,0 +1,32 @@
+.todo-form {
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.todo-input {
+  flex: 1;
+}
+
+.todo-input.ng-invalid.ng-touched {
+  border-color: #f44336;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+:host ::ng-deep .submit-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+:host ::ng-deep .cancel-btn {
+  border-radius: 0;
+}

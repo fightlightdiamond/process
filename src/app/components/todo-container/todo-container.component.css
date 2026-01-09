@@ -1,0 +1,65 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Error Message */
+::ng-deep .error-message {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+::ng-deep .loading-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* PrimeNG Card Styling */
+::ng-deep .todo-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+::ng-deep .todo-card .p-card-title {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+::ng-deep .todo-card .p-card-content {
+  padding-top: 0;
+}
+
+/* PrimeNG Button Styling */
+::ng-deep .p-button.p-button-success {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+::ng-deep .p-button.p-button-success:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
+
+/* PrimeNG InputText Focus Styling */
+::ng-deep .p-inputtext:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}

@@ -1,0 +1,54 @@
+<div class="todo-item" [class.completed]="todo.completed">
+  <!-- Checkbox for toggle -->
+  <p-checkbox
+    [binary]="true"
+    [ngModel]="todo.completed"
+    (click)="onToggle()"
+    [inputId]="'todo-' + todo.id"
+  ></p-checkbox>
+
+  <!-- Inline edit mode -->
+  @if (isEditing) {
+  <input
+    type="text"
+    pInputText
+    [(ngModel)]="editTitle"
+    (keydown)="onEditKeydown($event)"
+    (blur)="onSaveInlineEdit()"
+    class="edit-input"
+    autofocus
+  />
+  } @else {
+  <!-- Title display with double-click to edit -->
+  <span
+    class="todo-title"
+    [class.completed-text]="todo.completed"
+    (dblclick)="onStartInlineEdit()"
+  >
+    {{ todo.title }}
+  </span>
+  }
+
+  <!-- Action buttons -->
+  <div class="todo-actions">
+    <button
+      pButton
+      type="button"
+      icon="pi pi-pencil"
+      severity="info"
+      [text]="true"
+      (click)="onEditInForm()"
+      class="edit-btn"
+      pTooltip="Edit in form"
+    ></button>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-trash"
+      severity="danger"
+      [text]="true"
+      (click)="onDelete()"
+      class="delete-btn"
+    ></button>
+  </div>
+</div>

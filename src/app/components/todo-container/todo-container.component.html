@@ -1,0 +1,39 @@
+<p-card header="Todo List" styleClass="todo-card">
+  <!-- Error Message -->
+  @if (error$ | async; as error) {
+  <p-message
+    severity="error"
+    [text]="error"
+    styleClass="error-message"
+  ></p-message>
+  }
+
+  <!-- Todo Form (Presentational Component) -->
+  <app-todo-form
+    [editingTodo]="editingTodo"
+    (submitTodo)="onSubmitTodo($event)"
+    (cancelEdit)="onCancelEdit()"
+  ></app-todo-form>
+
+  <!-- Loading Indicator -->
+  @if (loading$ | async) {
+  <div class="loading-container">
+    <p-progressSpinner
+      styleClass="loading-spinner"
+      strokeWidth="4"
+      animationDuration=".5s"
+    ></p-progressSpinner>
+    <span class="loading-text">Loading...</span>
+  </div>
+  }
+
+  <!-- Todo List (Presentational Component) -->
+  <app-todo-list
+    [todos]="(todos$ | async) ?? []"
+    [loading]="(loading$ | async) ?? false"
+    (toggle)="onToggle($event)"
+    (delete)="onDelete($event)"
+    (update)="onUpdate($event)"
+    (editInForm)="onEditInForm($event)"
+  ></app-todo-list>
+</p-card>

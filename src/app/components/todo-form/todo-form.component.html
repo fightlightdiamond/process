@@ -1,0 +1,37 @@
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()" class="todo-form">
+  <div class="form-row">
+    <p-inputGroup>
+      <input
+        type="text"
+        pInputText
+        formControlName="title"
+        [placeholder]="isEditMode ? 'Edit todo...' : 'Add a new todo...'"
+        class="todo-input"
+        [class.ng-invalid]="isTitleInvalid"
+      />
+      <p-inputGroupAddon>
+        <p-button
+          type="submit"
+          [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'"
+          [label]="isEditMode ? 'Update' : 'Add'"
+          [disabled]="todoForm.invalid"
+          styleClass="submit-btn"
+        ></p-button>
+      </p-inputGroupAddon>
+      <p-inputGroupAddon *ngIf="isEditMode">
+        <p-button
+          type="button"
+          icon="pi pi-times"
+          label="Cancel"
+          severity="secondary"
+          (onClick)="onCancel()"
+          styleClass="cancel-btn"
+        ></p-button>
+      </p-inputGroupAddon>
+    </p-inputGroup>
+  </div>
+
+  <div *ngIf="isTitleInvalid" class="error-message">
+    {{ titleErrorMessage }}
+  </div>
+</form>
