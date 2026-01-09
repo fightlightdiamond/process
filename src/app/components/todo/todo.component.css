@@ -5,8 +5,40 @@
   padding: 0 1rem;
 }
 
+/* Error Message */
+::ng-deep .error-message {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
 .todo-form {
   margin-bottom: 1.5rem;
+}
+
+.p-error {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+::ng-deep .loading-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .todo-input {
@@ -74,7 +106,18 @@
   transition: all 0.2s ease;
 }
 
-.todo-item:hover .delete-btn {
+.edit-btn {
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.todo-item:hover .delete-btn,
+.todo-item:hover .edit-btn {
   opacity: 1;
 }
 

@@ -5,41 +5,316 @@ import {
   tick,
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
+import * as fc from 'fast-check';
 
-import { TodoComponent } from './todo.component';
-import { TodoService } from '../../services/todo.service';
+import { TodoComponent, noWhitespaceValidator } from './todo.component';
+import { TodoFacade } from '../../store/todo/todo.facade';
+import { Todo } from '../../models/todo.model';
+
+// Arbitrary for generating valid Todo objects
+const todoArbitrary = fc.record({
+  id: fc.uuid(),
+  title: fc.string({ minLength: 1 }).filter((s) => s.trim().length > 0),
+  completed: fc.boolean(),
+});
+
+// Arbitrary for generating whitespace-only strings
+const whitespaceArbitrary = fc
+  .array(fc.constantFrom(' ', '\t', '\n', '\r'), {
+    minLength: 1,
+    maxLength: 10,
+  })
+  .map((chars) => chars.join(''));
+
+// Arbitrary for generating valid non-whitespace strings
+const validTitleArbitrary = fc
+  .string({ minLength: 1 })
+  .filter((s) => s.trim().length > 0);
 
 describe('TodoComponent', () => {
   let component: TodoComponent;
   let fixture: ComponentFixture<TodoComponent>;
-  let todoService: TodoService;
+  let mockFacade: jasmine.SpyObj<TodoFacade>;
+  let todosSubject: BehaviorSubject<Todo[]>;
+  let loadingSubject: BehaviorSubject<boolean>;
+  let errorSubject: BehaviorSubject<string | null>;
 
   beforeEach(async () => {
+    todosSubject = new BehaviorSubject<Todo[]>([]);
+    loadingSubject = new BehaviorSubject<boolean>(false);
+    errorSubject = new BehaviorSubject<string | null>(null);
+
+    mockFacade = jasmine.createSpyObj('TodoFacade', [
+      'loadTodos',
+      'addTodo',
+      'updateTodo',
+      'toggleTodo',
+      'deleteTodo',
+    ]);
+
+    Object.defineProperty(mockFacade, 'todos$', {
+      get: () => todosSubject.asObservable(),
+    });
+    Object.defineProperty(mockFacade, 'loading$', {
+      get: () => loadingSubject.asObservable(),
+    });
+    Object.defineProperty(mockFacade, 'error$', {
+      get: () => errorSubject.asObservable(),
+    });
+
     await TestBed.configureTestingModule({
-      imports: [TodoComponent, NoopAnimationsModule, FormsModule],
+      imports: [
+        TodoComponent,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+        FormsModule,
+      ],
+      providers: [{ provide: TodoFacade, useValue: mockFacade }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TodoComponent);
     component = fixture.componentInstance;
-    todoService = TestBed.inject(TodoService);
     fixture.detectChanges();
   });
 
-  describe('Rendering (Requirements 2.1, 2.2)', () => {
+  describe('Component Creation', () => {
     it('should create the component', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should display empty state when no todos exist', () => {
-      const emptyState = fixture.debugElement.query(By.css('.empty-state'));
-      expect(emptyState).toBeTruthy();
+    it('should initialize with empty form', () => {
+      expect(component.todoForm.get('title')?.value).toBe('');
+    });
+  });
+
+  /**
+   * Feature: json-server-rxjs-store, Property 7: Form validation rejects empty/whitespace titles
+   * Validates: Requirements 8.3
+   */
+  describe('Property 7: Form validation rejects empty/whitespace titles', () => {
+    it('should reject whitespace-only strings', () => {
+      fc.assert(
+        fc.property(whitespaceArbitrary, (whitespaceString: string) => {
+          component.todoForm.get('title')?.setValue(whitespaceString);
+          component.todoForm.get('title')?.markAsTouched();
+
+          // Whitespace-only strings should make form invalid
+          expect(component.todoForm.invalid).toBe(true);
+        }),
+        { numRuns: 100 }
+      );
     });
 
-    it('should display todos from the service', fakeAsync(() => {
-      todoService.addTodo('Test Todo 1');
-      todoService.addTodo('Test Todo 2');
+    it('should reject empty string', () => {
+      component.todoForm.get('title')?.setValue('');
+      component.todoForm.get('title')?.markAsTouched();
+      expect(component.todoForm.invalid).toBe(true);
+    });
+
+    it('should accept non-empty, non-whitespace strings', () => {
+      fc.assert(
+        fc.property(validTitleArbitrary, (validString: string) => {
+          component.todoForm.get('title')?.setValue(validString);
+          component.todoForm.get('title')?.markAsTouched();
+
+          expect(component.todoForm.valid).toBe(true);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('noWhitespaceValidator should return error for whitespace-only strings', () => {
+      fc.assert(
+        fc.property(whitespaceArbitrary, (whitespaceString: string) => {
+          const control = new FormControl(whitespaceString);
+          const result = noWhitespaceValidator(control);
+          expect(result).toEqual({ whitespace: true });
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('noWhitespaceValidator should return null for valid strings', () => {
+      fc.assert(
+        fc.property(validTitleArbitrary, (validString: string) => {
+          const control = new FormControl(validString);
+          const result = noWhitespaceValidator(control);
+          expect(result).toBeNull();
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  /**
+   * Feature: json-server-rxjs-store, Property 8: Form populates correctly when editing
+   * Validates: Requirements 8.5
+   */
+  describe('Property 8: Form populates correctly when editing', () => {
+    it('should populate form with todo title when editing', () => {
+      fc.assert(
+        fc.property(todoArbitrary, (todo: Todo) => {
+          component.startEdit(todo);
+
+          expect(component.editingTodo).toEqual(todo);
+          expect(component.todoForm.get('title')?.value).toBe(todo.title);
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  /**
+   * Feature: json-server-rxjs-store, Property 9: Form resets after successful submission
+   * Validates: Requirements 8.6
+   */
+  describe('Property 9: Form resets after successful submission', () => {
+    it('should reset form after adding new todo', () => {
+      fc.assert(
+        fc.property(validTitleArbitrary, (validTitle: string) => {
+          // Set up form with valid title
+          component.todoForm.get('title')?.setValue(validTitle);
+          component.todoForm.get('title')?.markAsTouched();
+
+          // Submit form
+          component.onSubmit();
+
+          // Form should be reset
+          expect(component.todoForm.get('title')?.value).toBeFalsy();
+          expect(component.editingTodo).toBeNull();
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should reset form after editing submission', () => {
+      fc.assert(
+        fc.property(
+          todoArbitrary,
+          validTitleArbitrary,
+          (todo: Todo, newTitle: string) => {
+            // Start editing
+            component.startEdit(todo);
+
+            // Change title
+            component.todoForm.get('title')?.setValue(newTitle);
+
+            // Submit
+            component.onSubmit();
+
+            // Form should be reset
+            expect(component.todoForm.get('title')?.value).toBeFalsy();
+            expect(component.editingTodo).toBeNull();
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  /**
+   * Feature: json-server-rxjs-store, Property 10: Component displays loading state
+   * Validates: Requirements 9.7
+   */
+  describe('Property 10: Component displays loading state', () => {
+    it('should display loading indicator when loading$ is true', fakeAsync(() => {
+      loadingSubject.next(true);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const loadingContainer = fixture.debugElement.query(
+        By.css('.loading-container')
+      );
+      expect(loadingContainer).toBeTruthy();
+
+      const spinner = fixture.debugElement.query(By.css('p-progressSpinner'));
+      expect(spinner).toBeTruthy();
+    }));
+
+    it('should hide loading indicator when loading$ is false', fakeAsync(() => {
+      loadingSubject.next(false);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const loadingContainer = fixture.debugElement.query(
+        By.css('.loading-container')
+      );
+      expect(loadingContainer).toBeFalsy();
+    }));
+  });
+
+  /**
+   * Feature: json-server-rxjs-store, Property 11: Component displays error state
+   * Validates: Requirements 9.6
+   */
+  describe('Property 11: Component displays error state', () => {
+    it('should display error message when error$ has value', fakeAsync(() => {
+      const errorMessage = 'Test error message';
+      errorSubject.next(errorMessage);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const errorElement = fixture.debugElement.query(By.css('p-message'));
+      expect(errorElement).toBeTruthy();
+    }));
+
+    it('should hide error message when error$ is null', fakeAsync(() => {
+      errorSubject.next(null);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const errorElement = fixture.debugElement.query(By.css('p-message'));
+      expect(errorElement).toBeFalsy();
+    }));
+  });
+
+  describe('Facade Integration', () => {
+    it('should call facade.addTodo when submitting new todo', () => {
+      const title = 'New Todo';
+      component.todoForm.get('title')?.setValue(title);
+      component.onSubmit();
+
+      expect(mockFacade.addTodo).toHaveBeenCalledWith(title);
+    });
+
+    it('should call facade.updateTodo when submitting edited todo', () => {
+      const todo: Todo = { id: '1', title: 'Original', completed: false };
+      component.startEdit(todo);
+
+      const newTitle = 'Updated';
+      component.todoForm.get('title')?.setValue(newTitle);
+      component.onSubmit();
+
+      expect(mockFacade.updateTodo).toHaveBeenCalledWith('1', {
+        title: newTitle,
+      });
+    });
+
+    it('should call facade.toggleTodo when toggling', () => {
+      component.onToggleTodo('1');
+      expect(mockFacade.toggleTodo).toHaveBeenCalledWith('1');
+    });
+
+    it('should call facade.deleteTodo when deleting', () => {
+      component.onDeleteTodo('1');
+      expect(mockFacade.deleteTodo).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('Todo List Display', () => {
+    it('should display todos from facade', fakeAsync(() => {
+      const todos: Todo[] = [
+        { id: '1', title: 'Todo 1', completed: false },
+        { id: '2', title: 'Todo 2', completed: true },
+      ];
+      todosSubject.next(todos);
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -48,150 +323,15 @@ describe('TodoComponent', () => {
       expect(todoItems.length).toBe(2);
     }));
 
-    it('should display todo title and completion status (Requirements 2.3)', fakeAsync(() => {
-      todoService.addTodo('My Test Todo');
+    it('should display empty state when no todos', fakeAsync(() => {
+      todosSubject.next([]);
+      loadingSubject.next(false);
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
 
-      const todoTitle = fixture.debugElement.query(By.css('.todo-title'));
-      expect(todoTitle.nativeElement.textContent.trim()).toBe('My Test Todo');
-
-      const checkbox = fixture.debugElement.query(By.css('p-checkbox'));
-      expect(checkbox).toBeTruthy();
-    }));
-  });
-
-  describe('User Interactions', () => {
-    it('should add a new todo when form is submitted', fakeAsync(() => {
-      component.newTodoTitle = 'New Todo';
-      component.onAddTodo();
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todos = todoService.getTodos();
-      expect(todos.length).toBe(1);
-      expect(todos[0].title).toBe('New Todo');
-    }));
-
-    it('should clear input after adding todo (Requirements 1.3)', fakeAsync(() => {
-      component.newTodoTitle = 'New Todo';
-      component.onAddTodo();
-      fixture.detectChanges();
-      tick();
-
-      expect(component.newTodoTitle).toBe('');
-    }));
-
-    it('should not add empty todo', fakeAsync(() => {
-      component.newTodoTitle = '   ';
-      component.onAddTodo();
-      fixture.detectChanges();
-      tick();
-
-      const todos = todoService.getTodos();
-      expect(todos.length).toBe(0);
-    }));
-
-    it('should toggle todo completion status', fakeAsync(() => {
-      todoService.addTodo('Toggle Test');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todoId = todoService.getTodos()[0].id;
-      component.onToggleTodo(todoId);
-      fixture.detectChanges();
-      tick();
-
-      expect(todoService.getTodos()[0].completed).toBe(true);
-    }));
-
-    it('should delete a todo', fakeAsync(() => {
-      todoService.addTodo('Delete Test');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todoId = todoService.getTodos()[0].id;
-      component.onDeleteTodo(todoId);
-      fixture.detectChanges();
-      tick();
-
-      expect(todoService.getTodos().length).toBe(0);
-    }));
-
-    it('should start editing on double-click', fakeAsync(() => {
-      todoService.addTodo('Edit Test');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todo = todoService.getTodos()[0];
-      component.onStartEdit(todo);
-      fixture.detectChanges();
-
-      expect(component.editingTodoId).toBe(todo.id);
-      expect(component.editingTitle).toBe('Edit Test');
-    }));
-
-    it('should save edit on Enter key', fakeAsync(() => {
-      todoService.addTodo('Original Title');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todo = todoService.getTodos()[0];
-      component.onStartEdit(todo);
-      component.editingTitle = 'Updated Title';
-
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onEditKeydown(event, todo.id);
-      fixture.detectChanges();
-      tick();
-
-      expect(todoService.getTodos()[0].title).toBe('Updated Title');
-      expect(component.editingTodoId).toBeNull();
-    }));
-
-    it('should cancel edit on Escape key', fakeAsync(() => {
-      todoService.addTodo('Original Title');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const todo = todoService.getTodos()[0];
-      component.onStartEdit(todo);
-      component.editingTitle = 'Changed Title';
-
-      const event = new KeyboardEvent('keydown', { key: 'Escape' });
-      component.onEditKeydown(event, todo.id);
-      fixture.detectChanges();
-      tick();
-
-      expect(todoService.getTodos()[0].title).toBe('Original Title');
-      expect(component.editingTodoId).toBeNull();
-    }));
-  });
-
-  describe('Reactive Updates (Requirements 2.2)', () => {
-    it('should automatically update when todos change', fakeAsync(() => {
-      todoService.addTodo('First Todo');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      let todoItems = fixture.debugElement.queryAll(By.css('.todo-item'));
-      expect(todoItems.length).toBe(1);
-
-      todoService.addTodo('Second Todo');
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      todoItems = fixture.debugElement.queryAll(By.css('.todo-item'));
-      expect(todoItems.length).toBe(2);
+      const emptyState = fixture.debugElement.query(By.css('.empty-state'));
+      expect(emptyState).toBeTruthy();
     }));
   });
 });
