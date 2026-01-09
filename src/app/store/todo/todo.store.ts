@@ -1,3 +1,13 @@
+/**
+ * @Project       NgSSR Todo App
+ * @BD_ID         TODO-001
+ * @Description   Centralized state store using BehaviorSubject
+ * @Author        developer
+ * @CreatedDate   2026-01-09
+ * @Updater       developer
+ * @LastUpdated   2026-01-09
+ */
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';

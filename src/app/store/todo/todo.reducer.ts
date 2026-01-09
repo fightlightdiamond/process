@@ -1,3 +1,13 @@
+/**
+ * @Project       NgSSR Todo App
+ * @BD_ID         TODO-001
+ * @Description   Pure reducer function for Todo state management
+ * @Author        developer
+ * @CreatedDate   2026-01-09
+ * @Updater       developer
+ * @LastUpdated   2026-01-09
+ */
+
 import { Action, Todo, TodoState } from '../../models/todo.model';
 import { TodoActionTypes } from './todo.actions';
 

@@ -1,14 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import * as fc from 'fast-check';
 
-import {
-  TodoFormComponent,
-  noWhitespaceValidator,
-} from './todo-form.component';
+import { TodoFormComponent } from './todo-form.component';
 import { Todo } from '../../models/todo.model';
-import { FormControl } from '@angular/forms';
+import { noWhitespaceValidator } from '../../shared';
 
 // Arbitrary for generating valid Todo objects
 const todoArbitrary = fc.record({

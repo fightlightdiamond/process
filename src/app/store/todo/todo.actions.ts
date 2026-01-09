@@ -1,3 +1,13 @@
+/**
+ * @Project       NgSSR Todo App
+ * @BD_ID         TODO-001
+ * @Description   Redux-style action creators for Todo store
+ * @Author        developer
+ * @CreatedDate   2026-01-09
+ * @Updater       developer
+ * @LastUpdated   2026-01-09
+ */
+
 import { Action, Todo } from '../../models/todo.model';
 
 // Action Types

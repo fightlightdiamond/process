@@ -1,3 +1,13 @@
+/**
+ * @Project       NgSSR Todo App
+ * @BD_ID         TODO-001
+ * @Description   Side effects handler for Todo API calls
+ * @Author        developer
+ * @CreatedDate   2026-01-09
+ * @Updater       developer
+ * @LastUpdated   2026-01-09
+ */
+
 import { Injectable } from '@angular/core';
 import { Subject, merge } from 'rxjs';
 import { filter, switchMap, map, catchError } from 'rxjs/operators';

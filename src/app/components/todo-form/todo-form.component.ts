@@ -1,3 +1,13 @@
+/**
+ * @Project       NgSSR Todo App
+ * @BD_ID         TODO-001
+ * @Description   Presentational component for Todo form (add/edit)
+ * @Author        developer
+ * @CreatedDate   2026-01-09
+ * @Updater       developer
+ * @LastUpdated   2026-01-09
+ */
+
 import {
   Component,
   Input,
@@ -12,8 +22,6 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -22,25 +30,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 import { Todo } from '../../models/todo.model';
-
-/**
- * Custom validator to reject whitespace-only strings.
- *
- * EDGE CASE: The built-in 'required' validator passes for strings like "   "
- * because they are truthy. This validator ensures the trimmed value has content.
- *
- * @param control - The form control to validate
- * @returns ValidationErrors with 'whitespace' key if invalid, null if valid
- */
-export function noWhitespaceValidator(
-  control: AbstractControl
-): ValidationErrors | null {
-  // Only validate if there's a value (let 'required' handle empty)
-  if (control.value && control.value.trim().length === 0) {
-    return { whitespace: true };
-  }
-  return null;
-}
+import { noWhitespaceValidator } from '../../shared';
 
 /**
  * TodoFormComponent - Presentational Component
