@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -27,7 +27,7 @@ import { TodoListComponent } from '../todo-list/todo-list.component';
   selector: 'app-todo-container',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     ProgressSpinnerModule,
     MessageModule,
     CardModule,

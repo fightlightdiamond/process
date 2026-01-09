@@ -18,7 +18,8 @@
           styleClass="submit-btn"
         ></p-button>
       </p-inputGroupAddon>
-      <p-inputGroupAddon *ngIf="isEditMode">
+      @if (isEditMode) {
+      <p-inputGroupAddon>
         <p-button
           type="button"
           icon="pi pi-times"
@@ -28,10 +29,13 @@
           styleClass="cancel-btn"
         ></p-button>
       </p-inputGroupAddon>
+      }
     </p-inputGroup>
   </div>
 
-  <div *ngIf="isTitleInvalid" class="error-message">
+  @if (isTitleInvalid) {
+  <div class="error-message">
     {{ titleErrorMessage }}
   </div>
+  }
 </form>

@@ -5,7 +5,6 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -28,13 +27,7 @@ import { Todo } from '../../models/todo.model';
 @Component({
   selector: 'app-todo-item',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ButtonModule,
-    CheckboxModule,
-    InputTextModule,
-  ],
+  imports: [FormsModule, ButtonModule, CheckboxModule, InputTextModule],
   templateUrl: './todo-item.component.html',
   styleUrl: './todo-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

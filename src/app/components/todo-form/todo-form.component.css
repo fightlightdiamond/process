@@ -1,14 +1,32 @@
+/* ===========================================
+   Todo Form - Responsive Layout
+   =========================================== */
 .todo-form {
   margin-bottom: 1rem;
 }
 
 .form-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   gap: 0.5rem;
 }
 
+/* Fallback for browsers without gap support */
+@supports not (gap: 0.5rem) {
+  .form-row > * {
+    margin-right: 0.5rem;
+  }
+  .form-row > *:last-child {
+    margin-right: 0;
+  }
+}
+
 .todo-input {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
+  min-width: 0; /* Prevent flex item from overflowing */
 }
 
 .todo-input.ng-invalid.ng-touched {
@@ -22,6 +40,9 @@
   padding-left: 0.5rem;
 }
 
+/* ===========================================
+   Button Styling
+   =========================================== */
 :host ::ng-deep .submit-btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -29,4 +50,42 @@
 
 :host ::ng-deep .cancel-btn {
   border-radius: 0;
+}
+
+/* ===========================================
+   Mobile Responsive - Stack buttons vertically
+   =========================================== */
+@media screen and (max-width: 480px) {
+  .form-row {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  .todo-input {
+    width: 100%;
+  }
+
+  :host ::ng-deep .p-inputgroup {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  :host ::ng-deep .p-inputgroup > * {
+    border-radius: 6px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  :host ::ng-deep .p-inputgroup > *:last-child {
+    margin-bottom: 0;
+  }
+
+  :host ::ng-deep .submit-btn,
+  :host ::ng-deep .cancel-btn {
+    border-radius: 6px !important;
+    width: 100%;
+  }
 }

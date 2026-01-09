@@ -7,7 +7,6 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -25,11 +24,18 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { Todo } from '../../models/todo.model';
 
 /**
- * Custom validator to reject whitespace-only strings
+ * Custom validator to reject whitespace-only strings.
+ *
+ * EDGE CASE: The built-in 'required' validator passes for strings like "   "
+ * because they are truthy. This validator ensures the trimmed value has content.
+ *
+ * @param control - The form control to validate
+ * @returns ValidationErrors with 'whitespace' key if invalid, null if valid
  */
 export function noWhitespaceValidator(
   control: AbstractControl
 ): ValidationErrors | null {
+  // Only validate if there's a value (let 'required' handle empty)
   if (control.value && control.value.trim().length === 0) {
     return { whitespace: true };
   }
@@ -42,17 +48,19 @@ export function noWhitespaceValidator(
  * Displays a form for adding or editing todos with:
  * - Input field for todo title
  * - Submit button (Add/Update based on mode)
- * - Cancel button (visible in edit mode)
+ * - Cancel button (visible in edit mode only)
  * - Validation error messages
  *
- * This component does NOT inject any services.
- * All communication is via @Input and @Output only.
+ * PRESENTATIONAL COMPONENT RULES:
+ * - Does NOT inject any services
+ * - All communication is via @Input and @Output only
+ * - Uses OnPush change detection for performance
+ * - Can be tested without mocking services
  */
 @Component({
   selector: 'app-todo-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -64,27 +72,39 @@ export function noWhitespaceValidator(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoFormComponent implements OnChanges {
-  // Input: the todo being edited (null for add mode)
+  /**
+   * Input: the todo being edited.
+   * - null = Add mode (create new todo)
+   * - Todo object = Edit mode (update existing todo)
+   */
   @Input() editingTodo: Todo | null = null;
 
-  // Output events
+  /** Output: Emits trimmed title string when form is submitted */
   @Output() submitTodo = new EventEmitter<string>();
+
+  /** Output: Emits when user cancels edit mode */
   @Output() cancelEdit = new EventEmitter<void>();
 
-  // Reactive Form
+  /**
+   * Reactive Form with validation:
+   * - required: Title cannot be empty
+   * - noWhitespaceValidator: Title cannot be only whitespace
+   */
   todoForm = new FormGroup({
     title: new FormControl('', [Validators.required, noWhitespaceValidator]),
   });
 
   /**
-   * Check if we're in edit mode
+   * Check if we're in edit mode (editingTodo is set)
    */
   get isEditMode(): boolean {
     return this.editingTodo !== null;
   }
 
   /**
-   * Check if form title is invalid and touched
+   * Check if form title is invalid AND has been touched.
+   * We only show errors after user interaction to avoid showing
+   * errors on initial render.
    */
   get isTitleInvalid(): boolean {
     const titleControl = this.todoForm.get('title');
@@ -92,7 +112,8 @@ export class TodoFormComponent implements OnChanges {
   }
 
   /**
-   * Get the error message for title field
+   * Get the appropriate error message for title field.
+   * Priority: required > whitespace (check in order)
    */
   get titleErrorMessage(): string {
     const titleControl = this.todoForm.get('title');
@@ -106,22 +127,32 @@ export class TodoFormComponent implements OnChanges {
   }
 
   /**
-   * React to changes in editingTodo input
+   * React to changes in editingTodo input.
+   *
+   * IMPORTANT: This handles the transition between add/edit modes:
+   * - When editingTodo changes to a Todo: populate form with its title
+   * - When editingTodo changes to null: reset form for new entry
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editingTodo']) {
       if (this.editingTodo) {
-        // Populate form with todo title when editing
+        // Edit mode: populate form with existing todo title
         this.todoForm.patchValue({ title: this.editingTodo.title });
       } else {
-        // Reset form when not editing
+        // Add mode: clear form for new entry
         this.todoForm.reset();
       }
     }
   }
 
   /**
-   * Handle form submission
+   * Handle form submission.
+   *
+   * VALIDATION FLOW:
+   * 1. If form is valid: emit trimmed title and reset form
+   * 2. If form is invalid: mark all fields as touched to show errors
+   *
+   * The trim() ensures no leading/trailing whitespace in emitted value.
    */
   onSubmit(): void {
     if (this.todoForm.valid) {
@@ -131,13 +162,14 @@ export class TodoFormComponent implements OnChanges {
         this.todoForm.reset();
       }
     } else {
-      // Mark as touched to show validation errors
+      // Show validation errors by marking fields as touched
       this.todoForm.markAllAsTouched();
     }
   }
 
   /**
-   * Handle cancel button click
+   * Handle cancel button click.
+   * Emits cancelEdit event and resets form to clear any partial input.
    */
   onCancel(): void {
     this.cancelEdit.emit();

@@ -1,10 +1,22 @@
+/* ===========================================
+   Todo List Container
+   =========================================== */
 .todo-list-container {
   width: 100%;
 }
 
+/* ===========================================
+   Loading Indicator
+   =========================================== */
 .loading-indicator {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 2rem;
@@ -15,10 +27,22 @@
   font-size: 1.5rem;
 }
 
+/* ===========================================
+   Empty State
+   =========================================== */
 .empty-state {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   padding: 3rem 1rem;
   color: var(--text-color-secondary, #6c757d);
@@ -36,8 +60,43 @@
   font-size: 1rem;
 }
 
+/* ===========================================
+   Todo List - Flex Layout
+   =========================================== */
 .todo-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* Fallback for browsers without gap support */
+@supports not (gap: 0.5rem) {
+  .todo-list > * {
+    margin-bottom: 0.5rem;
+  }
+  .todo-list > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ===========================================
+   Mobile Responsive
+   =========================================== */
+@media screen and (max-width: 480px) {
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-state i {
+    font-size: 2.5rem;
+  }
+
+  .empty-state p {
+    font-size: 0.9rem;
+  }
 }

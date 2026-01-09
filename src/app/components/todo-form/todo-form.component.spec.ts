@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import * as fc from 'fast-check';
 
 import {
@@ -57,57 +56,81 @@ describe('TodoFormComponent', () => {
 
   describe('Component Creation', () => {
     it('should create the component', () => {
+      // Arrange - done in beforeEach
+      // Act - component created in beforeEach
+      // Assert
       expect(component).toBeTruthy();
     });
 
     it('should be a presentational component (no service injection)', () => {
-      // Verify component has @Input/@Output decorators only
+      // Arrange - done in beforeEach
+      // Act - component created in beforeEach
+      // Assert - Verify component has @Input/@Output decorators only
       expect(component.editingTodo).toBeNull();
       expect(component.submitTodo).toBeDefined();
       expect(component.cancelEdit).toBeDefined();
     });
 
     it('should initialize with empty form', () => {
+      // Arrange - done in beforeEach
+      // Act - component created in beforeEach
+      // Assert
       expect(component.todoForm.get('title')?.value).toBe('');
     });
 
     it('should be in add mode by default', () => {
+      // Arrange - done in beforeEach
+      // Act - component created in beforeEach
+      // Assert
       expect(component.isEditMode).toBe(false);
     });
   });
 
   describe('Form Validation', () => {
     it('should be invalid when title is empty', () => {
+      // Arrange
       component.todoForm.patchValue({ title: '' });
+      // Act - validation runs automatically
+      // Assert
       expect(component.todoForm.valid).toBe(false);
     });
 
     it('should be invalid when title is whitespace only', () => {
+      // Arrange
       component.todoForm.patchValue({ title: '   ' });
+      // Act - validation runs automatically
+      // Assert
       expect(component.todoForm.valid).toBe(false);
     });
 
     it('should be valid when title has non-whitespace content', () => {
+      // Arrange
       component.todoForm.patchValue({ title: 'Valid Title' });
+      // Act - validation runs automatically
+      // Assert
       expect(component.todoForm.valid).toBe(true);
     });
 
     it('should show error message when title is required', () => {
+      // Arrange
       const titleControl = component.todoForm.get('title');
       titleControl?.setValue('');
       titleControl?.markAsTouched();
+      // Act
       fixture.detectChanges();
-
+      // Assert
       expect(component.isTitleInvalid).toBe(true);
       expect(component.titleErrorMessage).toBe('Title is required');
     });
 
     it('should show error message when title is whitespace only', () => {
+      // Arrange
       const titleControl = component.todoForm.get('title');
       titleControl?.setValue('   ');
       titleControl?.markAsTouched();
+      // Act
       fixture.detectChanges();
-
+      // Assert
       expect(component.isTitleInvalid).toBe(true);
       expect(component.titleErrorMessage).toBe(
         'Title cannot be only whitespace'
@@ -117,66 +140,87 @@ describe('TodoFormComponent', () => {
 
   describe('noWhitespaceValidator', () => {
     it('should return null for valid string', () => {
+      // Arrange
       const control = new FormControl('valid');
-      expect(noWhitespaceValidator(control)).toBeNull();
+      // Act
+      const result = noWhitespaceValidator(control);
+      // Assert
+      expect(result).toBeNull();
     });
 
     it('should return error for whitespace-only string', () => {
+      // Arrange
       const control = new FormControl('   ');
-      expect(noWhitespaceValidator(control)).toEqual({ whitespace: true });
+      // Act
+      const result = noWhitespaceValidator(control);
+      // Assert
+      expect(result).toEqual({ whitespace: true });
     });
 
     it('should return null for empty string (handled by required)', () => {
+      // Arrange
       const control = new FormControl('');
-      expect(noWhitespaceValidator(control)).toBeNull();
+      // Act
+      const result = noWhitespaceValidator(control);
+      // Assert
+      expect(result).toBeNull();
     });
   });
 
   describe('Event Emissions', () => {
     it('should emit submitTodo event with trimmed title when form is valid', () => {
+      // Arrange
       spyOn(component.submitTodo, 'emit');
-
       component.todoForm.patchValue({ title: '  New Todo  ' });
+      // Act
       component.onSubmit();
-
+      // Assert
       expect(component.submitTodo.emit).toHaveBeenCalledWith('New Todo');
     });
 
     it('should not emit submitTodo event when form is invalid', () => {
+      // Arrange
       spyOn(component.submitTodo, 'emit');
-
       component.todoForm.patchValue({ title: '' });
+      // Act
       component.onSubmit();
-
+      // Assert
       expect(component.submitTodo.emit).not.toHaveBeenCalled();
     });
 
     it('should emit cancelEdit event when cancel button clicked', () => {
+      // Arrange
       spyOn(component.cancelEdit, 'emit');
-
+      // Act
       component.onCancel();
-
+      // Assert
       expect(component.cancelEdit.emit).toHaveBeenCalled();
     });
 
     it('should reset form after successful submission', () => {
+      // Arrange
       component.todoForm.patchValue({ title: 'New Todo' });
+      // Act
       component.onSubmit();
-
+      // Assert
       expect(component.todoForm.get('title')?.value).toBeNull();
     });
 
     it('should reset form after cancel', () => {
+      // Arrange
       component.todoForm.patchValue({ title: 'Some Title' });
+      // Act
       component.onCancel();
-
+      // Assert
       expect(component.todoForm.get('title')?.value).toBeNull();
     });
   });
 
   describe('Edit Mode', () => {
     it('should populate form when editingTodo is set', () => {
+      // Arrange
       component.editingTodo = mockTodo;
+      // Act
       component.ngOnChanges({
         editingTodo: {
           currentValue: mockTodo,
@@ -185,16 +229,20 @@ describe('TodoFormComponent', () => {
           isFirstChange: () => false,
         },
       });
-
+      // Assert
       expect(component.todoForm.get('title')?.value).toBe('Test Todo');
     });
 
     it('should be in edit mode when editingTodo is set', () => {
+      // Arrange
       component.editingTodo = mockTodo;
+      // Act - isEditMode is a getter that checks editingTodo
+      // Assert
       expect(component.isEditMode).toBe(true);
     });
 
     it('should reset form when editingTodo is cleared', () => {
+      // Arrange - set up edit mode first
       component.editingTodo = mockTodo;
       component.ngOnChanges({
         editingTodo: {
@@ -204,7 +252,7 @@ describe('TodoFormComponent', () => {
           isFirstChange: () => false,
         },
       });
-
+      // Act - clear editingTodo
       component.editingTodo = null;
       component.ngOnChanges({
         editingTodo: {
@@ -214,11 +262,12 @@ describe('TodoFormComponent', () => {
           isFirstChange: () => false,
         },
       });
-
+      // Assert
       expect(component.todoForm.get('title')?.value).toBeNull();
     });
 
     it('should be in edit mode when editingTodo is set', () => {
+      // Arrange
       component.editingTodo = mockTodo;
       component.ngOnChanges({
         editingTodo: {
@@ -228,28 +277,52 @@ describe('TodoFormComponent', () => {
           isFirstChange: () => false,
         },
       });
+      // Act
       fixture.detectChanges();
-
-      // Verify edit mode is active (cancel button is conditionally rendered based on isEditMode)
+      // Assert - Verify edit mode is active (cancel button is conditionally rendered based on isEditMode)
       expect(component.isEditMode).toBe(true);
     });
 
     it('should be in add mode when editingTodo is null', () => {
+      // Arrange - done in beforeEach (editingTodo is null by default)
+      // Act
       fixture.detectChanges();
-
-      // Verify add mode is active
+      // Assert - Verify add mode is active
       expect(component.isEditMode).toBe(false);
     });
   });
 
   describe('Form Submission Behavior', () => {
     it('should mark form as touched when submitting invalid form', () => {
+      // Arrange
       component.todoForm.patchValue({ title: '' });
       expect(component.todoForm.touched).toBe(false);
-
+      // Act
       component.onSubmit();
-
+      // Assert
       expect(component.todoForm.touched).toBe(true);
+    });
+
+    it('should not emit when title value is null after trim', () => {
+      // Arrange - This tests the edge case where form.get('title')?.value is null
+      spyOn(component.submitTodo, 'emit');
+      // Manually set form to valid state but with null value
+      component.todoForm.get('title')?.clearValidators();
+      component.todoForm.get('title')?.setValue(null);
+      component.todoForm.get('title')?.updateValueAndValidity();
+      // Act
+      component.onSubmit();
+      // Assert
+      expect(component.submitTodo.emit).not.toHaveBeenCalled();
+    });
+
+    it('should return empty string for titleErrorMessage when no errors', () => {
+      // Arrange
+      component.todoForm.patchValue({ title: 'Valid Title' });
+      // Act
+      const errorMessage = component.titleErrorMessage;
+      // Assert
+      expect(errorMessage).toBe('');
     });
   });
 });

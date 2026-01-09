@@ -51,6 +51,70 @@ describe('Todo Effects', () => {
     httpMock.verify();
   });
 
+  describe('Unit Tests - Fallback Error Messages', () => {
+    it('should use fallback message for LOAD_TODOS when error.message is undefined', fakeAsync(() => {
+      // Arrange
+      dispatchedActions = [];
+      // Act
+      actions$.next(loadTodos());
+      tick();
+      const req = httpMock.expectOne('http://localhost:3000/todos');
+      req.flush({}, { status: 500, statusText: 'Server Error' }); // No message property
+      tick();
+      // Assert
+      expect(dispatchedActions[0].type).toBe(
+        TodoActionTypes.LOAD_TODOS_FAILURE
+      );
+      expect(dispatchedActions[0].payload).toBe('Failed to load todos');
+    }));
+
+    it('should use fallback message for ADD_TODO when error.message is undefined', fakeAsync(() => {
+      // Arrange
+      dispatchedActions = [];
+      // Act
+      actions$.next(addTodo('Test'));
+      tick();
+      const req = httpMock.expectOne('http://localhost:3000/todos');
+      req.flush({}, { status: 500, statusText: 'Server Error' });
+      tick();
+      // Assert
+      expect(dispatchedActions[0].type).toBe(TodoActionTypes.ADD_TODO_FAILURE);
+      expect(dispatchedActions[0].payload).toBe('Failed to add todo');
+    }));
+
+    it('should use fallback message for UPDATE_TODO when error.message is undefined', fakeAsync(() => {
+      // Arrange
+      dispatchedActions = [];
+      // Act
+      actions$.next(updateTodo({ id: '1', updates: { title: 'Updated' } }));
+      tick();
+      const req = httpMock.expectOne('http://localhost:3000/todos/1');
+      req.flush({}, { status: 500, statusText: 'Server Error' });
+      tick();
+      // Assert
+      expect(dispatchedActions[0].type).toBe(
+        TodoActionTypes.UPDATE_TODO_FAILURE
+      );
+      expect(dispatchedActions[0].payload).toBe('Failed to update todo');
+    }));
+
+    it('should use fallback message for DELETE_TODO when error.message is undefined', fakeAsync(() => {
+      // Arrange
+      dispatchedActions = [];
+      // Act
+      actions$.next(deleteTodo('1'));
+      tick();
+      const req = httpMock.expectOne('http://localhost:3000/todos/1');
+      req.flush({}, { status: 500, statusText: 'Server Error' });
+      tick();
+      // Assert
+      expect(dispatchedActions[0].type).toBe(
+        TodoActionTypes.DELETE_TODO_FAILURE
+      );
+      expect(dispatchedActions[0].payload).toBe('Failed to delete todo');
+    }));
+  });
+
   describe('Property Tests', () => {
     /**
      * Feature: json-server-rxjs-store, Property 5: Effects dispatch correct actions on API response

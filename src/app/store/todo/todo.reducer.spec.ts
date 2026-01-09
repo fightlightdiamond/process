@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { todoReducer, initialState } from './todo.reducer';
+import { todoReducer } from './todo.reducer';
 import { TodoActionTypes } from './todo.actions';
 import { Todo, TodoState, Action } from '../../models/todo.model';
 
@@ -18,6 +18,207 @@ const todoStateArbitrary = fc.record({
 });
 
 describe('Todo Reducer', () => {
+  describe('Unit Tests', () => {
+    it('should return initial state when called with undefined state', () => {
+      // Arrange
+      const action = { type: 'UNKNOWN_ACTION' };
+      // Act
+      const result = todoReducer(undefined, action);
+      // Assert
+      expect(result).toEqual({
+        todos: [],
+        loading: false,
+        error: null,
+      });
+    });
+
+    it('should return unchanged state for unknown action type', () => {
+      // Arrange
+      const state: TodoState = {
+        todos: [{ id: '1', title: 'Test', completed: false }],
+        loading: false,
+        error: null,
+      };
+      const action = { type: 'UNKNOWN_ACTION' };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result).toBe(state); // Same reference
+    });
+
+    it('should handle LOAD_TODOS action', () => {
+      // Arrange
+      const state: TodoState = {
+        todos: [],
+        loading: false,
+        error: 'old error',
+      };
+      const action = { type: TodoActionTypes.LOAD_TODOS };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(true);
+      expect(result.error).toBeNull();
+    });
+
+    it('should handle LOAD_TODOS_SUCCESS action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const todos: Todo[] = [{ id: '1', title: 'Test', completed: false }];
+      const action = {
+        type: TodoActionTypes.LOAD_TODOS_SUCCESS,
+        payload: todos,
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.todos).toEqual(todos);
+      expect(result.loading).toBe(false);
+    });
+
+    it('should handle LOAD_TODOS_FAILURE action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const action = {
+        type: TodoActionTypes.LOAD_TODOS_FAILURE,
+        payload: 'Error message',
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(false);
+      expect(result.error).toBe('Error message');
+    });
+
+    it('should handle ADD_TODO action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: false, error: null };
+      const action = { type: TodoActionTypes.ADD_TODO, payload: 'New Todo' };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(true);
+      expect(result.error).toBeNull();
+    });
+
+    it('should handle ADD_TODO_SUCCESS action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const newTodo: Todo = { id: '1', title: 'New', completed: false };
+      const action = {
+        type: TodoActionTypes.ADD_TODO_SUCCESS,
+        payload: newTodo,
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.todos).toContain(newTodo);
+      expect(result.loading).toBe(false);
+    });
+
+    it('should handle ADD_TODO_FAILURE action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const action = {
+        type: TodoActionTypes.ADD_TODO_FAILURE,
+        payload: 'Add failed',
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(false);
+      expect(result.error).toBe('Add failed');
+    });
+
+    it('should handle UPDATE_TODO action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: false, error: null };
+      const action = {
+        type: TodoActionTypes.UPDATE_TODO,
+        payload: { id: '1', updates: { title: 'Updated' } },
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(true);
+      expect(result.error).toBeNull();
+    });
+
+    it('should handle UPDATE_TODO_SUCCESS action', () => {
+      // Arrange
+      const existingTodo: Todo = { id: '1', title: 'Old', completed: false };
+      const state: TodoState = {
+        todos: [existingTodo],
+        loading: true,
+        error: null,
+      };
+      const updatedTodo: Todo = { id: '1', title: 'Updated', completed: true };
+      const action = {
+        type: TodoActionTypes.UPDATE_TODO_SUCCESS,
+        payload: updatedTodo,
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.todos[0]).toEqual(updatedTodo);
+      expect(result.loading).toBe(false);
+    });
+
+    it('should handle UPDATE_TODO_FAILURE action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const action = {
+        type: TodoActionTypes.UPDATE_TODO_FAILURE,
+        payload: 'Update failed',
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(false);
+      expect(result.error).toBe('Update failed');
+    });
+
+    it('should handle DELETE_TODO action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: false, error: null };
+      const action = { type: TodoActionTypes.DELETE_TODO, payload: '1' };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(true);
+      expect(result.error).toBeNull();
+    });
+
+    it('should handle DELETE_TODO_SUCCESS action', () => {
+      // Arrange
+      const todo: Todo = { id: '1', title: 'Test', completed: false };
+      const state: TodoState = { todos: [todo], loading: true, error: null };
+      const action = {
+        type: TodoActionTypes.DELETE_TODO_SUCCESS,
+        payload: '1',
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.todos.length).toBe(0);
+      expect(result.loading).toBe(false);
+    });
+
+    it('should handle DELETE_TODO_FAILURE action', () => {
+      // Arrange
+      const state: TodoState = { todos: [], loading: true, error: null };
+      const action = {
+        type: TodoActionTypes.DELETE_TODO_FAILURE,
+        payload: 'Delete failed',
+      };
+      // Act
+      const result = todoReducer(state, action);
+      // Assert
+      expect(result.loading).toBe(false);
+      expect(result.error).toBe('Delete failed');
+    });
+  });
+
   describe('Property Tests', () => {
     /**
      * Feature: json-server-rxjs-store, Property 2: Reducer is a pure function
