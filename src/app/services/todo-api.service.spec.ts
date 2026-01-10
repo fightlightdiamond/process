@@ -1,14 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 import {
   HttpClientTestingModule,
   HttpTestingController,
-} from '@angular/common/http/testing';
-import * as fc from 'fast-check';
-import { Observable } from 'rxjs';
-import { TodoApiService } from './todo-api.service';
-import { Todo } from '../models/todo.model';
+} from "@angular/common/http/testing";
+import * as fc from "fast-check";
+import { Observable } from "rxjs";
+import { TodoApiService } from "./todo-api.service";
+import { Todo } from "../models/todo.model";
+import { environment } from "../../environments/environment";
 
-describe('TodoApiService', () => {
+const API_URL = `${environment.apiBaseUrl}/todos`;
+
+describe("TodoApiService", () => {
   let service: TodoApiService;
   let httpMock: HttpTestingController;
 
@@ -25,14 +28,14 @@ describe('TodoApiService', () => {
     httpMock.verify();
   });
 
-  describe('Property Tests', () => {
+  describe("Property Tests", () => {
     /**
      * Feature: json-server-rxjs-store, Property 6: API Service returns Observables
      * For any method call on TodoApiService (getTodos, addTodo, updateTodo, deleteTodo),
      * the return value SHALL be an Observable.
      * Validates: Requirements 7.3
      */
-    it('Property 6: API Service returns Observables', () => {
+    it("Property 6: API Service returns Observables", () => {
       // Test getTodos returns Observable - verify the return type is Observable
       // without triggering HTTP requests (checking the type before subscription)
       fc.assert(
@@ -50,7 +53,7 @@ describe('TodoApiService', () => {
             title: fc.string({ minLength: 1 }),
             completed: fc.boolean(),
           }),
-          (todoInput: Omit<Todo, 'id'>) => {
+          (todoInput: Omit<Todo, "id">) => {
             const result = service.addTodo(todoInput);
             return result instanceof Observable;
           }
@@ -85,45 +88,45 @@ describe('TodoApiService', () => {
     });
   });
 
-  describe('Unit Tests', () => {
-    it('should be created', () => {
+  describe("Unit Tests", () => {
+    it("should be created", () => {
       expect(service).toBeTruthy();
     });
 
-    it('getTodos should make GET request to correct URL', () => {
+    it("getTodos should make GET request to correct URL", () => {
       const mockTodos: Todo[] = [
-        { id: '1', title: 'Test Todo', completed: false },
+        { id: "1", title: "Test Todo", completed: false },
       ];
 
       service.getTodos().subscribe((todos) => {
         expect(todos).toEqual(mockTodos);
       });
 
-      const req = httpMock.expectOne('http://localhost:3000/todos');
-      expect(req.request.method).toBe('GET');
+      const req = httpMock.expectOne(API_URL);
+      expect(req.request.method).toBe("GET");
       req.flush(mockTodos);
     });
 
-    it('addTodo should make POST request with todo data', () => {
-      const newTodo: Omit<Todo, 'id'> = { title: 'New Todo', completed: false };
-      const mockResponse: Todo = { id: '1', ...newTodo };
+    it("addTodo should make POST request with todo data", () => {
+      const newTodo: Omit<Todo, "id"> = { title: "New Todo", completed: false };
+      const mockResponse: Todo = { id: "1", ...newTodo };
 
       service.addTodo(newTodo).subscribe((todo) => {
         expect(todo).toEqual(mockResponse);
       });
 
-      const req = httpMock.expectOne('http://localhost:3000/todos');
-      expect(req.request.method).toBe('POST');
+      const req = httpMock.expectOne(API_URL);
+      expect(req.request.method).toBe("POST");
       expect(req.request.body).toEqual(newTodo);
       req.flush(mockResponse);
     });
 
-    it('updateTodo should make PATCH request with updates', () => {
-      const id = '1';
-      const updates: Partial<Todo> = { title: 'Updated Title' };
+    it("updateTodo should make PATCH request with updates", () => {
+      const id = "1";
+      const updates: Partial<Todo> = { title: "Updated Title" };
       const mockResponse: Todo = {
         id,
-        title: 'Updated Title',
+        title: "Updated Title",
         completed: false,
       };
 
@@ -131,19 +134,19 @@ describe('TodoApiService', () => {
         expect(todo).toEqual(mockResponse);
       });
 
-      const req = httpMock.expectOne(`http://localhost:3000/todos/${id}`);
-      expect(req.request.method).toBe('PATCH');
+      const req = httpMock.expectOne(`${API_URL}/${id}`);
+      expect(req.request.method).toBe("PATCH");
       expect(req.request.body).toEqual(updates);
       req.flush(mockResponse);
     });
 
-    it('deleteTodo should make DELETE request to correct URL', () => {
-      const id = '1';
+    it("deleteTodo should make DELETE request to correct URL", () => {
+      const id = "1";
 
       service.deleteTodo(id).subscribe();
 
-      const req = httpMock.expectOne(`http://localhost:3000/todos/${id}`);
-      expect(req.request.method).toBe('DELETE');
+      const req = httpMock.expectOne(`${API_URL}/${id}`);
+      expect(req.request.method).toBe("DELETE");
       req.flush(null);
     });
   });

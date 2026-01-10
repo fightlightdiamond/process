@@ -29,23 +29,23 @@
         ></p-button>
       </p-inputGroupAddon>
       @if (isEditMode) {
-      <p-inputGroupAddon>
-        <p-button
-          type="button"
-          icon="pi pi-times"
-          label="Cancel"
-          severity="secondary"
-          (onClick)="onCancel()"
-          styleClass="cancel-btn"
-        ></p-button>
-      </p-inputGroupAddon>
+        <p-inputGroupAddon>
+          <p-button
+            type="button"
+            icon="pi pi-times"
+            label="Cancel"
+            severity="secondary"
+            (onClick)="onCancel()"
+            styleClass="cancel-btn"
+          ></p-button>
+        </p-inputGroupAddon>
       }
     </p-inputGroup>
   </div>
 
   @if (isTitleInvalid) {
-  <div class="error-message">
-    {{ titleErrorMessage }}
-  </div>
+    <div class="error-message">
+      {{ titleErrorMessage }}
+    </div>
   }
 </form>

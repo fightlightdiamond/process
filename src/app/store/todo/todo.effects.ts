@@ -8,13 +8,14 @@
  * @LastUpdated   2026-01-09
  */
 
-import { Injectable } from '@angular/core';
-import { Subject, merge } from 'rxjs';
-import { filter, switchMap, map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Subject, merge } from "rxjs";
+import { filter, switchMap, map, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
-import { Action, Todo } from '../../models/todo.model';
-import { TodoApiService } from '../../services/todo-api.service';
+import { Action, Todo } from "../../models/todo.model";
+import { TodoApiService } from "../../services/todo-api.service";
+import { TODO_ERROR_MESSAGES } from "../../shared";
 import {
   TodoActionTypes,
   loadTodosSuccess,
@@ -25,7 +26,7 @@ import {
   updateTodoFailure,
   deleteTodoSuccess,
   deleteTodoFailure,
-} from './todo.actions';
+} from "./todo.actions";
 
 /**
  * TodoEffects - Handles side effects (API calls) for todo actions.
@@ -38,7 +39,7 @@ import {
  * - catchError: Handle API errors gracefully, return failure action instead of breaking stream
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class TodoEffects {
   /**
@@ -94,7 +95,11 @@ export class TodoEffects {
           // Returns a failure action instead, keeping the effect alive
           // HttpErrorResponse has error.error for response body, error.message for default message
           catchError((error) =>
-            of(loadTodosFailure(error.error?.message || 'Failed to load todos'))
+            of(
+              loadTodosFailure(
+                error.error?.message || TODO_ERROR_MESSAGES.LOAD_FAILED
+              )
+            )
           )
         )
       )
@@ -112,14 +117,18 @@ export class TodoEffects {
       switchMap((action) => {
         const title = action.payload as string;
         // Create todo object without id (json-server generates id)
-        const newTodo: Omit<Todo, 'id'> = {
+        const newTodo: Omit<Todo, "id"> = {
           title,
           completed: false,
         };
         return this.apiService.addTodo(newTodo).pipe(
           map((todo: Todo) => addTodoSuccess(todo)),
           catchError((error) =>
-            of(addTodoFailure(error.error?.message || 'Failed to add todo'))
+            of(
+              addTodoFailure(
+                error.error?.message || TODO_ERROR_MESSAGES.ADD_FAILED
+              )
+            )
           )
         );
       })
@@ -143,7 +152,9 @@ export class TodoEffects {
           map((todo: Todo) => updateTodoSuccess(todo)),
           catchError((error) =>
             of(
-              updateTodoFailure(error.error?.message || 'Failed to update todo')
+              updateTodoFailure(
+                error.error?.message || TODO_ERROR_MESSAGES.UPDATE_FAILED
+              )
             )
           )
         );
@@ -166,7 +177,9 @@ export class TodoEffects {
           map(() => deleteTodoSuccess(id)),
           catchError((error) =>
             of(
-              deleteTodoFailure(error.error?.message || 'Failed to delete todo')
+              deleteTodoFailure(
+                error.error?.message || TODO_ERROR_MESSAGES.DELETE_FAILED
+              )
             )
           )
         );

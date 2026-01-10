@@ -1,16 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs';
-import * as fc from 'fast-check';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { By } from "@angular/platform-browser";
+import { BehaviorSubject } from "rxjs";
+import * as fc from "fast-check";
 
-import { TodoContainerComponent } from './todo-container.component';
-import { TodoFacade } from '../../store/todo/todo.facade';
-import { TodoFormComponent } from '../todo-form/todo-form.component';
-import { TodoListComponent } from '../todo-list/todo-list.component';
-import { Todo } from '../../models/todo.model';
+import { TodoContainerComponent } from "./todo-container.component";
+import { TodoFacade } from "../../store/todo/todo.facade";
+import { TodoFormComponent } from "../todo-form/todo-form.component";
+import { TodoListComponent } from "../todo-list/todo-list.component";
+import { Todo } from "../../models/todo.model";
 
-describe('TodoContainerComponent', () => {
+describe("TodoContainerComponent", () => {
   let component: TodoContainerComponent;
   let fixture: ComponentFixture<TodoContainerComponent>;
   let mockFacade: jasmine.SpyObj<TodoFacade>;
@@ -21,8 +21,8 @@ describe('TodoContainerComponent', () => {
   let errorSubject: BehaviorSubject<string | null>;
 
   const mockTodos: Todo[] = [
-    { id: '1', title: 'First Todo', completed: false },
-    { id: '2', title: 'Second Todo', completed: true },
+    { id: "1", title: "First Todo", completed: false },
+    { id: "2", title: "Second Todo", completed: true },
   ];
 
   beforeEach(async () => {
@@ -32,21 +32,21 @@ describe('TodoContainerComponent', () => {
     errorSubject = new BehaviorSubject<string | null>(null);
 
     // Create mock facade
-    mockFacade = jasmine.createSpyObj('TodoFacade', [
-      'addTodo',
-      'updateTodo',
-      'deleteTodo',
-      'toggleTodo',
+    mockFacade = jasmine.createSpyObj("TodoFacade", [
+      "addTodo",
+      "updateTodo",
+      "deleteTodo",
+      "toggleTodo",
     ]);
 
     // Set up observable properties
-    Object.defineProperty(mockFacade, 'todos$', {
+    Object.defineProperty(mockFacade, "todos$", {
       get: () => todosSubject.asObservable(),
     });
-    Object.defineProperty(mockFacade, 'loading$', {
+    Object.defineProperty(mockFacade, "loading$", {
       get: () => loadingSubject.asObservable(),
     });
-    Object.defineProperty(mockFacade, 'error$', {
+    Object.defineProperty(mockFacade, "error$", {
       get: () => errorSubject.asObservable(),
     });
 
@@ -60,42 +60,42 @@ describe('TodoContainerComponent', () => {
     fixture.detectChanges();
   });
 
-  describe('Component Creation', () => {
-    it('should create the component', () => {
+  describe("Component Creation", () => {
+    it("should create the component", () => {
       expect(component).toBeTruthy();
     });
 
-    it('should inject TodoFacade', () => {
-      expect(component['facade']).toBeTruthy();
+    it("should inject TodoFacade", () => {
+      expect(component["facade"]).toBeTruthy();
     });
 
-    it('should initialize observables from facade on ngOnInit', () => {
+    it("should initialize observables from facade on ngOnInit", () => {
       expect(component.todos$).toBeDefined();
       expect(component.loading$).toBeDefined();
       expect(component.error$).toBeDefined();
     });
 
-    it('should have editingTodo as null initially', () => {
+    it("should have editingTodo as null initially", () => {
       expect(component.editingTodo).toBeNull();
     });
   });
 
-  describe('Template Composition', () => {
-    it('should render TodoFormComponent', () => {
+  describe("Template Composition", () => {
+    it("should render TodoFormComponent", () => {
       const formComponent = fixture.debugElement.query(
         By.directive(TodoFormComponent)
       );
       expect(formComponent).toBeTruthy();
     });
 
-    it('should render TodoListComponent', () => {
+    it("should render TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       );
       expect(listComponent).toBeTruthy();
     });
 
-    it('should pass editingTodo to TodoFormComponent', () => {
+    it("should pass editingTodo to TodoFormComponent", () => {
       const formComponent = fixture.debugElement.query(
         By.directive(TodoFormComponent)
       ).componentInstance as TodoFormComponent;
@@ -109,7 +109,7 @@ describe('TodoContainerComponent', () => {
       expect(formComponent.editingTodo).toEqual(mockTodos[0]);
     });
 
-    it('should pass todos to TodoListComponent', () => {
+    it("should pass todos to TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
@@ -117,7 +117,7 @@ describe('TodoContainerComponent', () => {
       expect(listComponent.todos).toEqual(mockTodos);
     });
 
-    it('should pass loading to TodoListComponent', () => {
+    it("should pass loading to TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
@@ -131,73 +131,73 @@ describe('TodoContainerComponent', () => {
     });
   });
 
-  describe('Loading State', () => {
-    it('should display loading indicator when loading is true', () => {
+  describe("Loading State", () => {
+    it("should display loading indicator when loading is true", () => {
       loadingSubject.next(true);
       fixture.detectChanges();
 
       const loadingContainer = fixture.debugElement.query(
-        By.css('.loading-container')
+        By.css(".loading-container")
       );
       expect(loadingContainer).toBeTruthy();
     });
 
-    it('should not display loading indicator when loading is false', () => {
+    it("should not display loading indicator when loading is false", () => {
       loadingSubject.next(false);
       fixture.detectChanges();
 
       const loadingContainer = fixture.debugElement.query(
-        By.css('.loading-container')
+        By.css(".loading-container")
       );
       expect(loadingContainer).toBeFalsy();
     });
   });
 
-  describe('Error State', () => {
-    it('should display error message when error exists', () => {
-      errorSubject.next('Test error message');
+  describe("Error State", () => {
+    it("should display error message when error exists", () => {
+      errorSubject.next("Test error message");
       fixture.detectChanges();
 
-      const errorMessage = fixture.debugElement.query(By.css('p-message'));
+      const errorMessage = fixture.debugElement.query(By.css("p-message"));
       expect(errorMessage).toBeTruthy();
     });
 
-    it('should not display error message when error is null', () => {
+    it("should not display error message when error is null", () => {
       errorSubject.next(null);
       fixture.detectChanges();
 
-      const errorMessage = fixture.debugElement.query(By.css('p-message'));
+      const errorMessage = fixture.debugElement.query(By.css("p-message"));
       expect(errorMessage).toBeFalsy();
     });
   });
 
-  describe('Event Handling - onSubmitTodo', () => {
-    it('should call facade.addTodo when not editing', () => {
+  describe("Event Handling - onSubmitTodo", () => {
+    it("should call facade.addTodo when not editing", () => {
       component.editingTodo = null;
-      component.onSubmitTodo('New Todo');
+      component.onSubmitTodo("New Todo");
 
-      expect(mockFacade.addTodo).toHaveBeenCalledWith('New Todo');
+      expect(mockFacade.addTodo).toHaveBeenCalledWith("New Todo");
     });
 
-    it('should call facade.updateTodo when editing', () => {
+    it("should call facade.updateTodo when editing", () => {
       component.editingTodo = mockTodos[0];
-      component.onSubmitTodo('Updated Title');
+      component.onSubmitTodo("Updated Title");
 
-      expect(mockFacade.updateTodo).toHaveBeenCalledWith('1', {
-        title: 'Updated Title',
+      expect(mockFacade.updateTodo).toHaveBeenCalledWith("1", {
+        title: "Updated Title",
       });
     });
 
-    it('should reset editingTodo after update', () => {
+    it("should reset editingTodo after update", () => {
       component.editingTodo = mockTodos[0];
-      component.onSubmitTodo('Updated Title');
+      component.onSubmitTodo("Updated Title");
 
       expect(component.editingTodo).toBeNull();
     });
   });
 
-  describe('Event Handling - onCancelEdit', () => {
-    it('should reset editingTodo to null', () => {
+  describe("Event Handling - onCancelEdit", () => {
+    it("should reset editingTodo to null", () => {
       component.editingTodo = mockTodos[0];
       component.onCancelEdit();
 
@@ -205,52 +205,52 @@ describe('TodoContainerComponent', () => {
     });
   });
 
-  describe('Event Handling - onToggle', () => {
-    it('should call facade.toggleTodo with correct id', () => {
-      component.onToggle('1');
+  describe("Event Handling - onToggle", () => {
+    it("should call facade.toggleTodo with correct id", () => {
+      component.onToggle("1");
 
-      expect(mockFacade.toggleTodo).toHaveBeenCalledWith('1');
+      expect(mockFacade.toggleTodo).toHaveBeenCalledWith("1");
     });
   });
 
-  describe('Event Handling - onDelete', () => {
-    it('should call facade.deleteTodo with correct id', () => {
-      component.onDelete('1');
+  describe("Event Handling - onDelete", () => {
+    it("should call facade.deleteTodo with correct id", () => {
+      component.onDelete("1");
 
-      expect(mockFacade.deleteTodo).toHaveBeenCalledWith('1');
+      expect(mockFacade.deleteTodo).toHaveBeenCalledWith("1");
     });
   });
 
-  describe('Event Handling - onUpdate', () => {
-    it('should call facade.updateTodo with correct id and title', () => {
-      component.onUpdate({ id: '1', title: 'Updated Title' });
+  describe("Event Handling - onUpdate", () => {
+    it("should call facade.updateTodo with correct id and title", () => {
+      component.onUpdate({ id: "1", title: "Updated Title" });
 
-      expect(mockFacade.updateTodo).toHaveBeenCalledWith('1', {
-        title: 'Updated Title',
+      expect(mockFacade.updateTodo).toHaveBeenCalledWith("1", {
+        title: "Updated Title",
       });
     });
   });
 
-  describe('Event Handling - onEditInForm', () => {
-    it('should set editingTodo to the provided todo', () => {
+  describe("Event Handling - onEditInForm", () => {
+    it("should set editingTodo to the provided todo", () => {
       component.onEditInForm(mockTodos[0]);
 
       expect(component.editingTodo).toEqual(mockTodos[0]);
     });
   });
 
-  describe('Integration with Child Components', () => {
-    it('should handle submitTodo event from TodoFormComponent', () => {
+  describe("Integration with Child Components", () => {
+    it("should handle submitTodo event from TodoFormComponent", () => {
       const formComponent = fixture.debugElement.query(
         By.directive(TodoFormComponent)
       ).componentInstance as TodoFormComponent;
 
-      formComponent.submitTodo.emit('New Todo from Form');
+      formComponent.submitTodo.emit("New Todo from Form");
 
-      expect(mockFacade.addTodo).toHaveBeenCalledWith('New Todo from Form');
+      expect(mockFacade.addTodo).toHaveBeenCalledWith("New Todo from Form");
     });
 
-    it('should handle cancelEdit event from TodoFormComponent', () => {
+    it("should handle cancelEdit event from TodoFormComponent", () => {
       component.editingTodo = mockTodos[0];
       fixture.detectChanges();
 
@@ -263,39 +263,39 @@ describe('TodoContainerComponent', () => {
       expect(component.editingTodo).toBeNull();
     });
 
-    it('should handle toggle event from TodoListComponent', () => {
+    it("should handle toggle event from TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
 
-      listComponent.toggle.emit('1');
+      listComponent.toggle.emit("1");
 
-      expect(mockFacade.toggleTodo).toHaveBeenCalledWith('1');
+      expect(mockFacade.toggleTodo).toHaveBeenCalledWith("1");
     });
 
-    it('should handle delete event from TodoListComponent', () => {
+    it("should handle delete event from TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
 
-      listComponent.delete.emit('1');
+      listComponent.delete.emit("1");
 
-      expect(mockFacade.deleteTodo).toHaveBeenCalledWith('1');
+      expect(mockFacade.deleteTodo).toHaveBeenCalledWith("1");
     });
 
-    it('should handle update event from TodoListComponent', () => {
+    it("should handle update event from TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
 
-      listComponent.update.emit({ id: '1', title: 'Inline Updated' });
+      listComponent.update.emit({ id: "1", title: "Inline Updated" });
 
-      expect(mockFacade.updateTodo).toHaveBeenCalledWith('1', {
-        title: 'Inline Updated',
+      expect(mockFacade.updateTodo).toHaveBeenCalledWith("1", {
+        title: "Inline Updated",
       });
     });
 
-    it('should handle editInForm event from TodoListComponent', () => {
+    it("should handle editInForm event from TodoListComponent", () => {
       const listComponent = fixture.debugElement.query(
         By.directive(TodoListComponent)
       ).componentInstance as TodoListComponent;
@@ -314,7 +314,7 @@ describe('TodoContainerComponent', () => {
  * For any event emitted by child presentational components (submitTodo, toggle, delete, update),
  * THE TodoContainerComponent SHALL call the corresponding facade method with correct parameters.
  */
-describe('Property 4: Container event handling', () => {
+describe("Property 4: Container event handling", () => {
   let mockFacade: jasmine.SpyObj<TodoFacade>;
   let todosSubject: BehaviorSubject<Todo[]>;
   let loadingSubject: BehaviorSubject<boolean>;
@@ -351,20 +351,20 @@ describe('Property 4: Container event handling', () => {
     loadingSubject = new BehaviorSubject<boolean>(false);
     errorSubject = new BehaviorSubject<string | null>(null);
 
-    mockFacade = jasmine.createSpyObj('TodoFacade', [
-      'addTodo',
-      'updateTodo',
-      'deleteTodo',
-      'toggleTodo',
+    mockFacade = jasmine.createSpyObj("TodoFacade", [
+      "addTodo",
+      "updateTodo",
+      "deleteTodo",
+      "toggleTodo",
     ]);
 
-    Object.defineProperty(mockFacade, 'todos$', {
+    Object.defineProperty(mockFacade, "todos$", {
       get: () => todosSubject.asObservable(),
     });
-    Object.defineProperty(mockFacade, 'loading$', {
+    Object.defineProperty(mockFacade, "loading$", {
       get: () => loadingSubject.asObservable(),
     });
-    Object.defineProperty(mockFacade, 'error$', {
+    Object.defineProperty(mockFacade, "error$", {
       get: () => errorSubject.asObservable(),
     });
 
@@ -374,7 +374,7 @@ describe('Property 4: Container event handling', () => {
     }).compileComponents();
   });
 
-  it('should call facade.addTodo with correct title for any valid submitTodo event when not editing', () => {
+  it("should call facade.addTodo with correct title for any valid submitTodo event when not editing", () => {
     fc.assert(
       fc.property(titleArbitrary, (title: string) => {
         mockFacade.addTodo.calls.reset();
@@ -394,7 +394,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should call facade.updateTodo with correct id and title for any valid submitTodo event when editing', () => {
+  it("should call facade.updateTodo with correct id and title for any valid submitTodo event when editing", () => {
     fc.assert(
       fc.property(
         todoArbitrary,
@@ -421,7 +421,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should call facade.toggleTodo with correct id for any toggle event', () => {
+  it("should call facade.toggleTodo with correct id for any toggle event", () => {
     fc.assert(
       fc.property(fc.uuid(), (id: string) => {
         mockFacade.toggleTodo.calls.reset();
@@ -440,7 +440,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should call facade.deleteTodo with correct id for any delete event', () => {
+  it("should call facade.deleteTodo with correct id for any delete event", () => {
     fc.assert(
       fc.property(fc.uuid(), (id: string) => {
         mockFacade.deleteTodo.calls.reset();
@@ -459,7 +459,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should call facade.updateTodo with correct id and title for any update event', () => {
+  it("should call facade.updateTodo with correct id and title for any update event", () => {
     fc.assert(
       fc.property(fc.uuid(), titleArbitrary, (id: string, title: string) => {
         mockFacade.updateTodo.calls.reset();
@@ -478,7 +478,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should set editingTodo correctly for any editInForm event', () => {
+  it("should set editingTodo correctly for any editInForm event", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent();
@@ -494,7 +494,7 @@ describe('Property 4: Container event handling', () => {
     );
   });
 
-  it('should reset editingTodo to null for any cancelEdit event', () => {
+  it("should reset editingTodo to null for any cancelEdit event", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent();

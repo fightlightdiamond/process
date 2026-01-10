@@ -1,4 +1,4 @@
 /**
  * TodoList component barrel file
  */
-export * from './todo-list.component';
+export * from "./todo-list.component";

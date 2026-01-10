@@ -16,21 +16,27 @@ import {
   ChangeDetectionStrategy,
   OnChanges,
   SimpleChanges,
-} from '@angular/core';
+} from "@angular/core";
 import {
   ReactiveFormsModule,
   FormGroup,
   FormControl,
   Validators,
-} from '@angular/forms';
+} from "@angular/forms";
 
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 
-import { Todo } from '../../models/todo.model';
-import { noWhitespaceValidator } from '../../shared';
+import { Todo } from "../../models/todo.model";
+import {
+  noWhitespaceValidator,
+  maxLengthTrimmedValidator,
+  TODO_VALIDATION,
+  sanitizeString,
+  FORM_ERROR_MESSAGES,
+} from "../../shared";
 
 /**
  * TodoFormComponent - Presentational Component
@@ -48,7 +54,7 @@ import { noWhitespaceValidator } from '../../shared';
  * - Can be tested without mocking services
  */
 @Component({
-  selector: 'app-todo-form',
+  selector: "app-todo-form",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -57,8 +63,8 @@ import { noWhitespaceValidator } from '../../shared';
     InputGroupModule,
     InputGroupAddonModule,
   ],
-  templateUrl: './todo-form.component.html',
-  styleUrl: './todo-form.component.css',
+  templateUrl: "./todo-form.component.html",
+  styleUrl: "./todo-form.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoFormComponent implements OnChanges {
@@ -75,13 +81,21 @@ export class TodoFormComponent implements OnChanges {
   /** Output: Emits when user cancels edit mode */
   @Output() cancelEdit = new EventEmitter<void>();
 
+  /** Maximum length for title (exposed for template) */
+  readonly maxTitleLength = TODO_VALIDATION.TITLE_MAX_LENGTH;
+
   /**
    * Reactive Form with validation:
    * - required: Title cannot be empty
    * - noWhitespaceValidator: Title cannot be only whitespace
+   * - maxLengthTrimmedValidator: Title cannot exceed max length
    */
   todoForm = new FormGroup({
-    title: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    title: new FormControl("", [
+      Validators.required,
+      noWhitespaceValidator,
+      maxLengthTrimmedValidator(TODO_VALIDATION.TITLE_MAX_LENGTH),
+    ]),
   });
 
   /**
@@ -97,23 +111,26 @@ export class TodoFormComponent implements OnChanges {
    * errors on initial render.
    */
   get isTitleInvalid(): boolean {
-    const titleControl = this.todoForm.get('title');
+    const titleControl = this.todoForm.get("title");
     return !!(titleControl?.invalid && titleControl?.touched);
   }
 
   /**
    * Get the appropriate error message for title field.
-   * Priority: required > whitespace (check in order)
+   * Priority: required > whitespace > maxLength (check in order)
    */
   get titleErrorMessage(): string {
-    const titleControl = this.todoForm.get('title');
-    if (titleControl?.hasError('required')) {
-      return 'Title is required';
+    const titleControl = this.todoForm.get("title");
+    if (titleControl?.hasError("required")) {
+      return FORM_ERROR_MESSAGES.TITLE_REQUIRED;
     }
-    if (titleControl?.hasError('whitespace')) {
-      return 'Title cannot be only whitespace';
+    if (titleControl?.hasError("whitespace")) {
+      return FORM_ERROR_MESSAGES.TITLE_WHITESPACE;
     }
-    return '';
+    if (titleControl?.hasError("maxLengthTrimmed")) {
+      return FORM_ERROR_MESSAGES.TITLE_MAX_LENGTH(this.maxTitleLength);
+    }
+    return "";
   }
 
   /**
@@ -124,7 +141,7 @@ export class TodoFormComponent implements OnChanges {
    * - When editingTodo changes to null: reset form for new entry
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editingTodo']) {
+    if (changes["editingTodo"]) {
       if (this.editingTodo) {
         // Edit mode: populate form with existing todo title
         this.todoForm.patchValue({ title: this.editingTodo.title });
@@ -139,14 +156,18 @@ export class TodoFormComponent implements OnChanges {
    * Handle form submission.
    *
    * VALIDATION FLOW:
-   * 1. If form is valid: emit trimmed title and reset form
+   * 1. If form is valid: sanitize and emit title, then reset form
    * 2. If form is invalid: mark all fields as touched to show errors
    *
-   * The trim() ensures no leading/trailing whitespace in emitted value.
+   * sanitizeString() ensures:
+   * - Trimmed (no leading/trailing whitespace)
+   * - No dangerous HTML characters
+   * - Within max length limit
    */
   onSubmit(): void {
     if (this.todoForm.valid) {
-      const title = this.todoForm.get('title')?.value?.trim();
+      const rawTitle = this.todoForm.get("title")?.value;
+      const title = sanitizeString(rawTitle);
       if (title) {
         this.submitTodo.emit(title);
         this.todoForm.reset();

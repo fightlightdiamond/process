@@ -6,14 +6,14 @@
  * THE component SHALL NOT inject any services, SHALL NOT directly subscribe to observables,
  * and SHALL only communicate via @Input and @Output decorators.
  */
-import { TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
-import * as fc from 'fast-check';
+import { TestBed } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { ReactiveFormsModule } from "@angular/forms";
+import * as fc from "fast-check";
 
-import { TodoFormComponent } from './todo-form/todo-form.component';
-import { TodoItemComponent } from './todo-item/todo-item.component';
-import { TodoListComponent } from './todo-list/todo-list.component';
+import { TodoFormComponent } from "./todo-form/todo-form.component";
+import { TodoItemComponent } from "./todo-item/todo-item.component";
+import { TodoListComponent } from "./todo-list/todo-list.component";
 
 // Arbitrary for generating valid Todo objects
 const todoArbitrary = fc.record({
@@ -25,7 +25,7 @@ const todoArbitrary = fc.record({
   completed: fc.boolean(),
 });
 
-describe('Property 5: Presentational component purity', () => {
+describe("Property 5: Presentational component purity", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -38,31 +38,31 @@ describe('Property 5: Presentational component purity', () => {
     }).compileComponents();
   });
 
-  describe('No service injection verification', () => {
-    it('TodoFormComponent should not inject any business logic services', () => {
+  describe("No service injection verification", () => {
+    it("TodoFormComponent should not inject any business logic services", () => {
       const fixture = TestBed.createComponent(TodoFormComponent);
       expect(fixture).toBeTruthy();
       fixture.destroy();
     });
 
-    it('TodoItemComponent should not inject any business logic services', () => {
+    it("TodoItemComponent should not inject any business logic services", () => {
       const fixture = TestBed.createComponent(TodoItemComponent);
       const component = fixture.componentInstance;
-      component.todo = { id: '1', title: 'Test', completed: false };
+      component.todo = { id: "1", title: "Test", completed: false };
       fixture.detectChanges();
       expect(fixture).toBeTruthy();
       fixture.destroy();
     });
 
-    it('TodoListComponent should not inject any business logic services', () => {
+    it("TodoListComponent should not inject any business logic services", () => {
       const fixture = TestBed.createComponent(TodoListComponent);
       expect(fixture).toBeTruthy();
       fixture.destroy();
     });
   });
 
-  describe('OnPush change detection verification', () => {
-    it('TodoFormComponent should use OnPush change detection strategy', () => {
+  describe("OnPush change detection verification", () => {
+    it("TodoFormComponent should use OnPush change detection strategy", () => {
       const fixture = TestBed.createComponent(TodoFormComponent);
       // OnPush components will have their change detector marked appropriately
       // We verify by checking the component was created successfully
@@ -71,29 +71,29 @@ describe('Property 5: Presentational component purity', () => {
       fixture.destroy();
     });
 
-    it('TodoItemComponent should use OnPush change detection strategy', () => {
+    it("TodoItemComponent should use OnPush change detection strategy", () => {
       const fixture = TestBed.createComponent(TodoItemComponent);
       const component = fixture.componentInstance;
-      component.todo = { id: '1', title: 'Test', completed: false };
+      component.todo = { id: "1", title: "Test", completed: false };
       fixture.detectChanges();
       expect(fixture.componentInstance).toBeTruthy();
       fixture.destroy();
     });
 
-    it('TodoListComponent should use OnPush change detection strategy', () => {
+    it("TodoListComponent should use OnPush change detection strategy", () => {
       const fixture = TestBed.createComponent(TodoListComponent);
       expect(fixture.componentInstance).toBeTruthy();
       fixture.destroy();
     });
   });
 
-  describe('@Input/@Output only communication verification', () => {
-    it('TodoFormComponent should only communicate via @Input and @Output', () => {
+  describe("@Input/@Output only communication verification", () => {
+    it("TodoFormComponent should only communicate via @Input and @Output", () => {
       const fixture = TestBed.createComponent(TodoFormComponent);
       const component = fixture.componentInstance;
 
       // Verify @Input properties exist
-      expect('editingTodo' in component).toBe(true);
+      expect("editingTodo" in component).toBe(true);
 
       // Verify @Output properties exist and are EventEmitters
       expect(component.submitTodo).toBeDefined();
@@ -104,16 +104,16 @@ describe('Property 5: Presentational component purity', () => {
       fixture.destroy();
     });
 
-    it('TodoItemComponent should only communicate via @Input and @Output', () => {
+    it("TodoItemComponent should only communicate via @Input and @Output", () => {
       const fixture = TestBed.createComponent(TodoItemComponent);
       const component = fixture.componentInstance;
 
       // Set required input
-      component.todo = { id: '1', title: 'Test', completed: false };
+      component.todo = { id: "1", title: "Test", completed: false };
       fixture.detectChanges();
 
       // Verify @Input properties exist
-      expect('todo' in component).toBe(true);
+      expect("todo" in component).toBe(true);
 
       // Verify @Output properties exist and are EventEmitters
       expect(component.toggle).toBeDefined();
@@ -128,13 +128,13 @@ describe('Property 5: Presentational component purity', () => {
       fixture.destroy();
     });
 
-    it('TodoListComponent should only communicate via @Input and @Output', () => {
+    it("TodoListComponent should only communicate via @Input and @Output", () => {
       const fixture = TestBed.createComponent(TodoListComponent);
       const component = fixture.componentInstance;
 
       // Verify @Input properties exist
-      expect('todos' in component).toBe(true);
-      expect('loading' in component).toBe(true);
+      expect("todos" in component).toBe(true);
+      expect("loading" in component).toBe(true);
 
       // Verify @Output properties exist and are EventEmitters
       expect(component.toggle).toBeDefined();
@@ -150,8 +150,8 @@ describe('Property 5: Presentational component purity', () => {
     });
   });
 
-  describe('No direct observable subscription verification', () => {
-    it('TodoFormComponent should not have any observable subscriptions in component code', () => {
+  describe("No direct observable subscription verification", () => {
+    it("TodoFormComponent should not have any observable subscriptions in component code", () => {
       const fixture = TestBed.createComponent(TodoFormComponent);
       const component = fixture.componentInstance;
 
@@ -160,8 +160,8 @@ describe('Property 5: Presentational component purity', () => {
       const componentKeys = Object.keys(component);
       const subscriptionKeys = componentKeys.filter(
         (key) =>
-          key.toLowerCase().includes('subscription') ||
-          key.toLowerCase().includes('subject')
+          key.toLowerCase().includes("subscription") ||
+          key.toLowerCase().includes("subject")
       );
 
       expect(subscriptionKeys.length).toBe(0);
@@ -169,17 +169,17 @@ describe('Property 5: Presentational component purity', () => {
       fixture.destroy();
     });
 
-    it('TodoItemComponent should not have any observable subscriptions in component code', () => {
+    it("TodoItemComponent should not have any observable subscriptions in component code", () => {
       const fixture = TestBed.createComponent(TodoItemComponent);
       const component = fixture.componentInstance;
-      component.todo = { id: '1', title: 'Test', completed: false };
+      component.todo = { id: "1", title: "Test", completed: false };
       fixture.detectChanges();
 
       const componentKeys = Object.keys(component);
       const subscriptionKeys = componentKeys.filter(
         (key) =>
-          key.toLowerCase().includes('subscription') ||
-          key.toLowerCase().includes('subject')
+          key.toLowerCase().includes("subscription") ||
+          key.toLowerCase().includes("subject")
       );
 
       expect(subscriptionKeys.length).toBe(0);
@@ -187,15 +187,15 @@ describe('Property 5: Presentational component purity', () => {
       fixture.destroy();
     });
 
-    it('TodoListComponent should not have any observable subscriptions in component code', () => {
+    it("TodoListComponent should not have any observable subscriptions in component code", () => {
       const fixture = TestBed.createComponent(TodoListComponent);
       const component = fixture.componentInstance;
 
       const componentKeys = Object.keys(component);
       const subscriptionKeys = componentKeys.filter(
         (key) =>
-          key.toLowerCase().includes('subscription') ||
-          key.toLowerCase().includes('subject')
+          key.toLowerCase().includes("subscription") ||
+          key.toLowerCase().includes("subject")
       );
 
       expect(subscriptionKeys.length).toBe(0);
@@ -204,8 +204,8 @@ describe('Property 5: Presentational component purity', () => {
     });
   });
 
-  describe('Property-based purity verification', () => {
-    it('TodoFormComponent maintains purity for any valid editingTodo input', () => {
+  describe("Property-based purity verification", () => {
+    it("TodoFormComponent maintains purity for any valid editingTodo input", () => {
       fc.assert(
         fc.property(fc.option(todoArbitrary, { nil: null }), (editingTodo) => {
           const fixture = TestBed.createComponent(TodoFormComponent);
@@ -229,8 +229,8 @@ describe('Property 5: Presentational component purity', () => {
           const componentKeys = Object.keys(component);
           const subscriptionKeys = componentKeys.filter(
             (key) =>
-              key.toLowerCase().includes('subscription') ||
-              key.toLowerCase().includes('subject')
+              key.toLowerCase().includes("subscription") ||
+              key.toLowerCase().includes("subject")
           );
 
           expect(subscriptionKeys.length).toBe(0);
@@ -242,7 +242,7 @@ describe('Property 5: Presentational component purity', () => {
       );
     });
 
-    it('TodoItemComponent maintains purity for any valid todo input', () => {
+    it("TodoItemComponent maintains purity for any valid todo input", () => {
       fc.assert(
         fc.property(todoArbitrary, (todo) => {
           const fixture = TestBed.createComponent(TodoItemComponent);
@@ -256,8 +256,8 @@ describe('Property 5: Presentational component purity', () => {
           const componentKeys = Object.keys(component);
           const subscriptionKeys = componentKeys.filter(
             (key) =>
-              key.toLowerCase().includes('subscription') ||
-              key.toLowerCase().includes('subject')
+              key.toLowerCase().includes("subscription") ||
+              key.toLowerCase().includes("subject")
           );
 
           expect(subscriptionKeys.length).toBe(0);
@@ -269,7 +269,7 @@ describe('Property 5: Presentational component purity', () => {
       );
     });
 
-    it('TodoListComponent maintains purity for any valid todos array input', () => {
+    it("TodoListComponent maintains purity for any valid todos array input", () => {
       fc.assert(
         fc.property(
           fc.array(todoArbitrary, { minLength: 0, maxLength: 20 }),
@@ -279,16 +279,16 @@ describe('Property 5: Presentational component purity', () => {
             const component = fixture.componentInstance;
 
             // Set inputs
-            fixture.componentRef.setInput('todos', todos);
-            fixture.componentRef.setInput('loading', loading);
+            fixture.componentRef.setInput("todos", todos);
+            fixture.componentRef.setInput("loading", loading);
             fixture.detectChanges();
 
             // Verify component still has no subscriptions after input change
             const componentKeys = Object.keys(component);
             const subscriptionKeys = componentKeys.filter(
               (key) =>
-                key.toLowerCase().includes('subscription') ||
-                key.toLowerCase().includes('subject')
+                key.toLowerCase().includes("subscription") ||
+                key.toLowerCase().includes("subject")
             );
 
             expect(subscriptionKeys.length).toBe(0);

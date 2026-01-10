@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
-import { ChangeDetectorRef } from '@angular/core';
-import * as fc from 'fast-check';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { By } from "@angular/platform-browser";
+import { ChangeDetectorRef } from "@angular/core";
+import * as fc from "fast-check";
 
-import { TodoListComponent } from './todo-list.component';
-import { TodoItemComponent } from '../todo-item/todo-item.component';
-import { Todo } from '../../models/todo.model';
+import { TodoListComponent } from "./todo-list.component";
+import { TodoItemComponent } from "../todo-item/todo-item.component";
+import { Todo } from "../../models/todo.model";
 
 // Arbitrary for generating valid Todo objects
 const todoArbitrary = fc.record({
@@ -18,14 +18,14 @@ const todoArbitrary = fc.record({
   completed: fc.boolean(),
 });
 
-describe('TodoListComponent', () => {
+describe("TodoListComponent", () => {
   let component: TodoListComponent;
   let fixture: ComponentFixture<TodoListComponent>;
 
   const mockTodos: Todo[] = [
-    { id: '1', title: 'First Todo', completed: false },
-    { id: '2', title: 'Second Todo', completed: true },
-    { id: '3', title: 'Third Todo', completed: false },
+    { id: "1", title: "First Todo", completed: false },
+    { id: "2", title: "Second Todo", completed: true },
+    { id: "3", title: "Third Todo", completed: false },
   ];
 
   beforeEach(async () => {
@@ -40,17 +40,17 @@ describe('TodoListComponent', () => {
 
   // Helper to update inputs and trigger change detection for OnPush
   function updateInputs(todos: Todo[], loading: boolean): void {
-    fixture.componentRef.setInput('todos', todos);
-    fixture.componentRef.setInput('loading', loading);
+    fixture.componentRef.setInput("todos", todos);
+    fixture.componentRef.setInput("loading", loading);
     fixture.detectChanges();
   }
 
-  describe('Component Creation', () => {
-    it('should create the component', () => {
+  describe("Component Creation", () => {
+    it("should create the component", () => {
       expect(component).toBeTruthy();
     });
 
-    it('should be a presentational component (no service injection)', () => {
+    it("should be a presentational component (no service injection)", () => {
       // Verify component has only @Input/@Output decorators
       expect(component.todos).toBeDefined();
       expect(component.loading).toBeDefined();
@@ -60,62 +60,62 @@ describe('TodoListComponent', () => {
       expect(component.editInForm).toBeDefined();
     });
 
-    it('should have default empty todos array', () => {
+    it("should have default empty todos array", () => {
       expect(component.todos).toEqual([]);
     });
 
-    it('should have default loading as false', () => {
+    it("should have default loading as false", () => {
       expect(component.loading).toBe(false);
     });
   });
 
-  describe('Rendering with empty array', () => {
-    it('should display empty state when todos array is empty', () => {
+  describe("Rendering with empty array", () => {
+    it("should display empty state when todos array is empty", () => {
       updateInputs([], false);
 
-      const emptyState = fixture.debugElement.query(By.css('.empty-state'));
+      const emptyState = fixture.debugElement.query(By.css(".empty-state"));
       expect(emptyState).toBeTruthy();
-      expect(emptyState.nativeElement.textContent).toContain('No todos yet');
+      expect(emptyState.nativeElement.textContent).toContain("No todos yet");
     });
 
-    it('should not display todo list when todos array is empty', () => {
+    it("should not display todo list when todos array is empty", () => {
       updateInputs([], false);
 
-      const todoList = fixture.debugElement.query(By.css('.todo-list'));
+      const todoList = fixture.debugElement.query(By.css(".todo-list"));
       expect(todoList).toBeFalsy();
     });
 
-    it('should not display empty state when loading', () => {
+    it("should not display empty state when loading", () => {
       updateInputs([], true);
 
-      const emptyState = fixture.debugElement.query(By.css('.empty-state'));
+      const emptyState = fixture.debugElement.query(By.css(".empty-state"));
       expect(emptyState).toBeFalsy();
     });
   });
 
-  describe('Rendering with non-empty array', () => {
+  describe("Rendering with non-empty array", () => {
     beforeEach(() => {
       updateInputs(mockTodos, false);
     });
 
-    it('should render TodoItemComponent for each todo', () => {
+    it("should render TodoItemComponent for each todo", () => {
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
       );
       expect(todoItems.length).toBe(3);
     });
 
-    it('should not display empty state when todos exist', () => {
-      const emptyState = fixture.debugElement.query(By.css('.empty-state'));
+    it("should not display empty state when todos exist", () => {
+      const emptyState = fixture.debugElement.query(By.css(".empty-state"));
       expect(emptyState).toBeFalsy();
     });
 
-    it('should display todo list container', () => {
-      const todoList = fixture.debugElement.query(By.css('.todo-list'));
+    it("should display todo list container", () => {
+      const todoList = fixture.debugElement.query(By.css(".todo-list"));
       expect(todoList).toBeTruthy();
     });
 
-    it('should pass correct todo to each TodoItemComponent', () => {
+    it("should pass correct todo to each TodoItemComponent", () => {
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
       );
@@ -127,83 +127,83 @@ describe('TodoListComponent', () => {
     });
   });
 
-  describe('Loading state', () => {
-    it('should display loading indicator when loading is true', () => {
+  describe("Loading state", () => {
+    it("should display loading indicator when loading is true", () => {
       updateInputs([], true);
 
       const loadingIndicator = fixture.debugElement.query(
-        By.css('.loading-indicator')
+        By.css(".loading-indicator")
       );
       expect(loadingIndicator).toBeTruthy();
-      expect(loadingIndicator.nativeElement.textContent).toContain('Loading');
+      expect(loadingIndicator.nativeElement.textContent).toContain("Loading");
     });
 
-    it('should not display loading indicator when loading is false', () => {
+    it("should not display loading indicator when loading is false", () => {
       updateInputs([], false);
 
       const loadingIndicator = fixture.debugElement.query(
-        By.css('.loading-indicator')
+        By.css(".loading-indicator")
       );
       expect(loadingIndicator).toBeFalsy();
     });
 
-    it('should not display todo list when loading', () => {
+    it("should not display todo list when loading", () => {
       updateInputs(mockTodos, true);
 
-      const todoList = fixture.debugElement.query(By.css('.todo-list'));
+      const todoList = fixture.debugElement.query(By.css(".todo-list"));
       expect(todoList).toBeFalsy();
     });
   });
 
-  describe('Event propagation', () => {
+  describe("Event propagation", () => {
     beforeEach(() => {
       updateInputs(mockTodos, false);
     });
 
-    it('should emit toggle event when TodoItemComponent emits toggle', () => {
-      spyOn(component.toggle, 'emit');
+    it("should emit toggle event when TodoItemComponent emits toggle", () => {
+      spyOn(component.toggle, "emit");
 
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
       );
       const firstItem = todoItems[0].componentInstance as TodoItemComponent;
 
-      firstItem.toggle.emit('1');
+      firstItem.toggle.emit("1");
 
-      expect(component.toggle.emit).toHaveBeenCalledWith('1');
+      expect(component.toggle.emit).toHaveBeenCalledWith("1");
     });
 
-    it('should emit delete event when TodoItemComponent emits delete', () => {
-      spyOn(component.delete, 'emit');
+    it("should emit delete event when TodoItemComponent emits delete", () => {
+      spyOn(component.delete, "emit");
 
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
       );
       const firstItem = todoItems[0].componentInstance as TodoItemComponent;
 
-      firstItem.delete.emit('1');
+      firstItem.delete.emit("1");
 
-      expect(component.delete.emit).toHaveBeenCalledWith('1');
+      expect(component.delete.emit).toHaveBeenCalledWith("1");
     });
 
-    it('should emit update event when TodoItemComponent emits update', () => {
-      spyOn(component.update, 'emit');
+    it("should emit update event when TodoItemComponent emits update", () => {
+      spyOn(component.update, "emit");
 
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
       );
       const firstItem = todoItems[0].componentInstance as TodoItemComponent;
 
-      firstItem.update.emit({ id: '1', title: 'Updated Title' });
+      firstItem.update.emit({ id: "1", title: "Updated Title" });
 
       expect(component.update.emit).toHaveBeenCalledWith({
-        id: '1',
-        title: 'Updated Title',
+        id: "1",
+        title: "Updated Title",
       });
     });
 
-    it('should emit editInForm event when TodoItemComponent emits editInForm', () => {
-      spyOn(component.editInForm, 'emit');
+    it("should emit editInForm event when TodoItemComponent emits editInForm", () => {
+      spyOn(component.editInForm, "emit");
 
       const todoItems = fixture.debugElement.queryAll(
         By.directive(TodoItemComponent)
@@ -216,11 +216,11 @@ describe('TodoListComponent', () => {
     });
   });
 
-  describe('TrackBy function', () => {
-    it('should return todo id for trackBy', () => {
-      const todo: Todo = { id: 'test-id', title: 'Test', completed: false };
+  describe("TrackBy function", () => {
+    it("should return todo id for trackBy", () => {
+      const todo: Todo = { id: "test-id", title: "Test", completed: false };
       const result = component.trackByTodoId(0, todo);
-      expect(result).toBe('test-id');
+      expect(result).toBe("test-id");
     });
   });
 });
@@ -234,7 +234,7 @@ describe('TodoListComponent', () => {
  * event emitted by a child TodoItemComponent, THE TodoListComponent SHALL re-emit
  * the event to its parent.
  */
-describe('Property 3: TodoList rendering and event propagation', () => {
+describe("Property 3: TodoList rendering and event propagation", () => {
   // Helper function to create a fresh component for each property test iteration
   function createComponent(
     todos: Todo[],
@@ -245,8 +245,8 @@ describe('Property 3: TodoList rendering and event propagation', () => {
   } {
     const fixture = TestBed.createComponent(TodoListComponent);
     const component = fixture.componentInstance;
-    fixture.componentRef.setInput('todos', todos);
-    fixture.componentRef.setInput('loading', loading);
+    fixture.componentRef.setInput("todos", todos);
+    fixture.componentRef.setInput("loading", loading);
     fixture.detectChanges();
     return { component, fixture };
   }
@@ -257,7 +257,7 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     }).compileComponents();
   });
 
-  it('should render exactly one TodoItemComponent for each todo in any non-empty array', () => {
+  it("should render exactly one TodoItemComponent for each todo in any non-empty array", () => {
     fc.assert(
       fc.property(
         fc
@@ -296,13 +296,13 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     );
   });
 
-  it('should display empty state for empty todos array when not loading', () => {
+  it("should display empty state for empty todos array when not loading", () => {
     fc.assert(
       fc.property(fc.constant([] as Todo[]), (todos: Todo[]) => {
         const { fixture } = createComponent(todos, false);
 
-        const emptyState = fixture.debugElement.query(By.css('.empty-state'));
-        const todoList = fixture.debugElement.query(By.css('.todo-list'));
+        const emptyState = fixture.debugElement.query(By.css(".empty-state"));
+        const todoList = fixture.debugElement.query(By.css(".todo-list"));
 
         expect(emptyState).toBeTruthy();
         expect(todoList).toBeFalsy();
@@ -314,7 +314,7 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     );
   });
 
-  it('should re-emit toggle event with correct id for any todo', () => {
+  it("should re-emit toggle event with correct id for any todo", () => {
     fc.assert(
       fc.property(
         fc
@@ -359,7 +359,7 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     );
   });
 
-  it('should re-emit delete event with correct id for any todo', () => {
+  it("should re-emit delete event with correct id for any todo", () => {
     fc.assert(
       fc.property(
         fc
@@ -404,7 +404,7 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     );
   });
 
-  it('should re-emit update event with correct data for any todo', () => {
+  it("should re-emit update event with correct data for any todo", () => {
     fc.assert(
       fc.property(
         fc
@@ -453,7 +453,7 @@ describe('Property 3: TodoList rendering and event propagation', () => {
     );
   });
 
-  it('should re-emit editInForm event with correct todo for any todo', () => {
+  it("should re-emit editInForm event with correct todo for any todo", () => {
     fc.assert(
       fc.property(
         fc

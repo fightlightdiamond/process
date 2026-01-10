@@ -5,6 +5,16 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
+/**
+ * Server configuration constants
+ */
+const SERVER_CONFIG = {
+  /** Default port for Express server when PORT env var is not set */
+  DEFAULT_PORT: 4000,
+  /** Cache duration for static assets (1 year for cache busting) */
+  STATIC_MAX_AGE: '1y',
+} as const;
+
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
@@ -17,12 +27,13 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get('*.*', express.static(browserDistFolder, {
-    maxAge: '1y'
-  }));
+  server.get(
+    '*.*',
+    express.static(browserDistFolder, {
+      maxAge: SERVER_CONFIG.STATIC_MAX_AGE,
+    })
+  );
 
   // All regular routes use the Angular engine
   server.get('*', (req, res, next) => {
@@ -44,7 +55,7 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env['PORT'] || 4000;
+  const port = process.env['PORT'] || SERVER_CONFIG.DEFAULT_PORT;
 
   // Start up the Node server
   const server = app();

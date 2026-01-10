@@ -8,18 +8,18 @@
  * @LastUpdated   2026-01-09
  */
 
-import { Component, OnInit } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { Observable } from "rxjs";
 
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { MessageModule } from 'primeng/message';
-import { CardModule } from 'primeng/card';
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { MessageModule } from "primeng/message";
+import { CardModule } from "primeng/card";
 
-import { Todo } from '../../models/todo.model';
-import { TodoFacade } from '../../store/todo/todo.facade';
-import { TodoFormComponent } from '../todo-form/todo-form.component';
-import { TodoListComponent } from '../todo-list/todo-list.component';
+import { Todo } from "../../models/todo.model";
+import { TodoFacade } from "../../store/todo/todo.facade";
+import { TodoFormComponent } from "../todo-form/todo-form.component";
+import { TodoListComponent } from "../todo-list/todo-list.component";
 
 /**
  * TodoContainerComponent - Container/Smart Component
@@ -34,7 +34,7 @@ import { TodoListComponent } from '../todo-list/todo-list.component';
  * This component is the ONLY component that connects to the store/facade.
  */
 @Component({
-  selector: 'app-todo-container',
+  selector: "app-todo-container",
   standalone: true,
   imports: [
     AsyncPipe,
@@ -44,8 +44,9 @@ import { TodoListComponent } from '../todo-list/todo-list.component';
     TodoFormComponent,
     TodoListComponent,
   ],
-  templateUrl: './todo-container.component.html',
-  styleUrl: './todo-container.component.css',
+  templateUrl: "./todo-container.component.html",
+  styleUrl: "./todo-container.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoContainerComponent implements OnInit {
   // Observables from facade

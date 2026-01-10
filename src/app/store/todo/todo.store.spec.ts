@@ -1,24 +1,24 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import * as fc from 'fast-check';
+import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import * as fc from "fast-check";
 
-import { TodoStore } from './todo.store';
-import { TodoEffects } from './todo.effects';
-import { TodoApiService } from '../../services/todo-api.service';
-import { Todo, TodoState, Action } from '../../models/todo.model';
+import { TodoStore } from "./todo.store";
+import { TodoEffects } from "./todo.effects";
+import { TodoApiService } from "../../services/todo-api.service";
+import { Todo, TodoState, Action } from "../../models/todo.model";
 import {
   TodoActionTypes,
   loadTodosSuccess,
   addTodoSuccess,
-} from './todo.actions';
-import { initialState } from './todo.reducer';
+} from "./todo.actions";
+import { initialState } from "./todo.reducer";
 
-describe('TodoStore', () => {
+describe("TodoStore", () => {
   let store: TodoStore;
   let mockEffects: jasmine.SpyObj<TodoEffects>;
 
   beforeEach(() => {
-    mockEffects = jasmine.createSpyObj('TodoEffects', ['init']);
+    mockEffects = jasmine.createSpyObj("TodoEffects", ["init"]);
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -28,48 +28,48 @@ describe('TodoStore', () => {
     store = TestBed.inject(TodoStore);
   });
 
-  describe('Initialization', () => {
-    it('should be created', () => {
+  describe("Initialization", () => {
+    it("should be created", () => {
       expect(store).toBeTruthy();
     });
 
-    it('should initialize effects with actions$ and dispatch function', () => {
+    it("should initialize effects with actions$ and dispatch function", () => {
       expect(mockEffects.init).toHaveBeenCalled();
       const [actions$, dispatchFn] = mockEffects.init.calls.mostRecent().args;
       expect(actions$).toBeDefined();
-      expect(typeof dispatchFn).toBe('function');
+      expect(typeof dispatchFn).toBe("function");
     });
 
-    it('should have initial state', () => {
+    it("should have initial state", () => {
       const state = store.getState();
       expect(state).toEqual(initialState);
     });
   });
 
-  describe('Selectors', () => {
-    it('should expose todos$ observable', (done) => {
+  describe("Selectors", () => {
+    it("should expose todos$ observable", (done) => {
       store.todos$.subscribe((todos) => {
         expect(todos).toEqual([]);
         done();
       });
     });
 
-    it('should expose loading$ observable', (done) => {
+    it("should expose loading$ observable", (done) => {
       store.loading$.subscribe((loading) => {
         expect(loading).toBe(false);
         done();
       });
     });
 
-    it('should expose error$ observable', (done) => {
+    it("should expose error$ observable", (done) => {
       store.error$.subscribe((error) => {
         expect(error).toBeNull();
         done();
       });
     });
 
-    it('should emit updated todos when state changes', (done) => {
-      const mockTodos: Todo[] = [{ id: '1', title: 'Test', completed: false }];
+    it("should emit updated todos when state changes", (done) => {
+      const mockTodos: Todo[] = [{ id: "1", title: "Test", completed: false }];
       let emitCount = 0;
 
       store.todos$.subscribe((todos) => {
@@ -83,7 +83,7 @@ describe('TodoStore', () => {
       store.dispatch(loadTodosSuccess(mockTodos));
     });
 
-    it('should emit updated loading when state changes', (done) => {
+    it("should emit updated loading when state changes", (done) => {
       let emitCount = 0;
 
       store.loading$.subscribe((loading) => {
@@ -97,38 +97,38 @@ describe('TodoStore', () => {
       store.dispatch({ type: TodoActionTypes.LOAD_TODOS });
     });
 
-    it('should emit updated error when state changes', (done) => {
+    it("should emit updated error when state changes", (done) => {
       let emitCount = 0;
 
       store.error$.subscribe((error) => {
         emitCount++;
         if (emitCount === 2) {
-          expect(error).toBe('Test error');
+          expect(error).toBe("Test error");
           done();
         }
       });
 
       store.dispatch({
         type: TodoActionTypes.LOAD_TODOS_FAILURE,
-        payload: 'Test error',
+        payload: "Test error",
       });
     });
   });
 
-  describe('dispatch', () => {
-    it('should update state when action is dispatched', () => {
+  describe("dispatch", () => {
+    it("should update state when action is dispatched", () => {
       // Arrange
-      const mockTodos: Todo[] = [{ id: '1', title: 'Test', completed: false }];
+      const mockTodos: Todo[] = [{ id: "1", title: "Test", completed: false }];
       // Act
       store.dispatch(loadTodosSuccess(mockTodos));
       // Assert
       expect(store.getState().todos).toEqual(mockTodos);
     });
 
-    it('should handle multiple dispatches', () => {
+    it("should handle multiple dispatches", () => {
       // Arrange
-      const todo1: Todo = { id: '1', title: 'First', completed: false };
-      const todo2: Todo = { id: '2', title: 'Second', completed: true };
+      const todo1: Todo = { id: "1", title: "First", completed: false };
+      const todo2: Todo = { id: "2", title: "Second", completed: true };
       // Act
       store.dispatch(loadTodosSuccess([todo1]));
       store.dispatch(addTodoSuccess(todo2));
@@ -137,10 +137,10 @@ describe('TodoStore', () => {
     });
   });
 
-  describe('getState', () => {
-    it('should return current state snapshot', () => {
+  describe("getState", () => {
+    it("should return current state snapshot", () => {
       // Arrange
-      const mockTodos: Todo[] = [{ id: '1', title: 'Test', completed: false }];
+      const mockTodos: Todo[] = [{ id: "1", title: "Test", completed: false }];
       store.dispatch(loadTodosSuccess(mockTodos));
       // Act
       const state = store.getState();
@@ -151,8 +151,8 @@ describe('TodoStore', () => {
     });
   });
 
-  describe('Effects Integration', () => {
-    it('should dispatch actions from effects callback', () => {
+  describe("Effects Integration", () => {
+    it("should dispatch actions from effects callback", () => {
       // Arrange - Get the dispatch callback that was passed to effects.init
       const [, dispatchFn] = mockEffects.init.calls.mostRecent().args;
       const testAction: Action = {
@@ -166,9 +166,9 @@ describe('TodoStore', () => {
     });
   });
 
-  describe('distinctUntilChanged behavior', () => {
-    it('should not emit duplicate todos values', (done) => {
-      const mockTodos: Todo[] = [{ id: '1', title: 'Test', completed: false }];
+  describe("distinctUntilChanged behavior", () => {
+    it("should not emit duplicate todos values", (done) => {
+      const mockTodos: Todo[] = [{ id: "1", title: "Test", completed: false }];
       let emitCount = 0;
 
       store.todos$.subscribe(() => {
@@ -191,7 +191,7 @@ describe('TodoStore', () => {
 /**
  * Property-based tests for TodoStore
  */
-describe('TodoStore Property Tests', () => {
+describe("TodoStore Property Tests", () => {
   const todoArbitrary = fc.record({
     id: fc.uuid(),
     title: fc
@@ -205,7 +205,7 @@ describe('TodoStore Property Tests', () => {
   let mockEffects: jasmine.SpyObj<TodoEffects>;
 
   function createStore(): TodoStore {
-    mockEffects = jasmine.createSpyObj('TodoEffects', ['init']);
+    mockEffects = jasmine.createSpyObj("TodoEffects", ["init"]);
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -216,7 +216,7 @@ describe('TodoStore Property Tests', () => {
     return TestBed.inject(TodoStore);
   }
 
-  it('should correctly update state for any LOAD_TODOS_SUCCESS action', () => {
+  it("should correctly update state for any LOAD_TODOS_SUCCESS action", () => {
     fc.assert(
       fc.property(
         fc.array(todoArbitrary, { minLength: 0, maxLength: 10 }),
@@ -236,7 +236,7 @@ describe('TodoStore Property Tests', () => {
     );
   });
 
-  it('should correctly update state for any ADD_TODO_SUCCESS action', () => {
+  it("should correctly update state for any ADD_TODO_SUCCESS action", () => {
     fc.assert(
       fc.property(
         fc.array(todoArbitrary, { minLength: 0, maxLength: 5 }),
@@ -259,7 +259,7 @@ describe('TodoStore Property Tests', () => {
     );
   });
 
-  it('should maintain state consistency through multiple dispatches', () => {
+  it("should maintain state consistency through multiple dispatches", () => {
     fc.assert(
       fc.property(
         fc.array(todoArbitrary, { minLength: 1, maxLength: 5 }),

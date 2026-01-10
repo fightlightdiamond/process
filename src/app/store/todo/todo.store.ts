@@ -8,13 +8,13 @@
  * @LastUpdated   2026-01-09
  */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Subject, Observable } from "rxjs";
+import { map, distinctUntilChanged } from "rxjs/operators";
 
-import { Action, Todo, TodoState } from '../../models/todo.model';
-import { todoReducer, initialState } from './todo.reducer';
-import { TodoEffects } from './todo.effects';
+import { Action, Todo, TodoState } from "../../models/todo.model";
+import { todoReducer, initialState } from "./todo.reducer";
+import { TodoEffects } from "./todo.effects";
 
 /**
  * TodoStore - Custom Redux-like store implementation using RxJS
@@ -28,7 +28,7 @@ import { TodoEffects } from './todo.effects';
  *       Side effects are handled by TodoEffects which listens to actions$
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class TodoStore {
   /**

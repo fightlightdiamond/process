@@ -14,14 +14,14 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from "primeng/button";
+import { CheckboxModule } from "primeng/checkbox";
+import { InputTextModule } from "primeng/inputtext";
 
-import { Todo } from '../../models/todo.model';
+import { Todo } from "../../models/todo.model";
 
 /**
  * TodoItemComponent - Presentational Component
@@ -35,11 +35,11 @@ import { Todo } from '../../models/todo.model';
  * All communication is via @Input and @Output only.
  */
 @Component({
-  selector: 'app-todo-item',
+  selector: "app-todo-item",
   standalone: true,
   imports: [FormsModule, ButtonModule, CheckboxModule, InputTextModule],
-  templateUrl: './todo-item.component.html',
-  styleUrl: './todo-item.component.css',
+  templateUrl: "./todo-item.component.html",
+  styleUrl: "./todo-item.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoItemComponent {
@@ -54,7 +54,7 @@ export class TodoItemComponent {
 
   // Internal state for inline editing
   isEditing = false;
-  editTitle = '';
+  editTitle = "";
 
   /**
    * Handle checkbox click - emit toggle event
@@ -101,16 +101,16 @@ export class TodoItemComponent {
    */
   cancelInlineEdit(): void {
     this.isEditing = false;
-    this.editTitle = '';
+    this.editTitle = "";
   }
 
   /**
    * Handle keyboard events during inline edit
    */
   onEditKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       this.onSaveInlineEdit();
-    } else if (event.key === 'Escape') {
+    } else if (event.key === "Escape") {
       this.cancelInlineEdit();
     }
   }

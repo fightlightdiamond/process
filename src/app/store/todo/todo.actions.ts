@@ -8,22 +8,22 @@
  * @LastUpdated   2026-01-09
  */
 
-import { Action, Todo } from '../../models/todo.model';
+import { Action, Todo } from "../../models/todo.model";
 
 // Action Types
 export const TodoActionTypes = {
-  LOAD_TODOS: '[Todo] Load Todos',
-  LOAD_TODOS_SUCCESS: '[Todo] Load Todos Success',
-  LOAD_TODOS_FAILURE: '[Todo] Load Todos Failure',
-  ADD_TODO: '[Todo] Add Todo',
-  ADD_TODO_SUCCESS: '[Todo] Add Todo Success',
-  ADD_TODO_FAILURE: '[Todo] Add Todo Failure',
-  UPDATE_TODO: '[Todo] Update Todo',
-  UPDATE_TODO_SUCCESS: '[Todo] Update Todo Success',
-  UPDATE_TODO_FAILURE: '[Todo] Update Todo Failure',
-  DELETE_TODO: '[Todo] Delete Todo',
-  DELETE_TODO_SUCCESS: '[Todo] Delete Todo Success',
-  DELETE_TODO_FAILURE: '[Todo] Delete Todo Failure',
+  LOAD_TODOS: "[Todo] Load Todos",
+  LOAD_TODOS_SUCCESS: "[Todo] Load Todos Success",
+  LOAD_TODOS_FAILURE: "[Todo] Load Todos Failure",
+  ADD_TODO: "[Todo] Add Todo",
+  ADD_TODO_SUCCESS: "[Todo] Add Todo Success",
+  ADD_TODO_FAILURE: "[Todo] Add Todo Failure",
+  UPDATE_TODO: "[Todo] Update Todo",
+  UPDATE_TODO_SUCCESS: "[Todo] Update Todo Success",
+  UPDATE_TODO_FAILURE: "[Todo] Update Todo Failure",
+  DELETE_TODO: "[Todo] Delete Todo",
+  DELETE_TODO_SUCCESS: "[Todo] Delete Todo Success",
+  DELETE_TODO_FAILURE: "[Todo] Delete Todo Failure",
 } as const;
 
 // Action Creators

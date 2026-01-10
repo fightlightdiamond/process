@@ -19,24 +19,24 @@
 
   <!-- Inline edit mode -->
   @if (isEditing) {
-  <input
-    type="text"
-    pInputText
-    [(ngModel)]="editTitle"
-    (keydown)="onEditKeydown($event)"
-    (blur)="onSaveInlineEdit()"
-    class="edit-input"
-    autofocus
-  />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="editTitle"
+      (keydown)="onEditKeydown($event)"
+      (blur)="onSaveInlineEdit()"
+      class="edit-input"
+      autofocus
+    />
   } @else {
-  <!-- Title display with double-click to edit -->
-  <span
-    class="todo-title"
-    [class.completed-text]="todo.completed"
-    (dblclick)="onStartInlineEdit()"
-  >
-    {{ todo.title }}
-  </span>
+    <!-- Title display with double-click to edit -->
+    <span
+      class="todo-title"
+      [class.completed-text]="todo.completed"
+      (dblclick)="onStartInlineEdit()"
+    >
+      {{ todo.title }}
+    </span>
   }
 
   <!-- Action buttons -->

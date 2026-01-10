@@ -1,21 +1,21 @@
-import { TestBed } from '@angular/core/testing';
-import { BehaviorSubject } from 'rxjs';
-import * as fc from 'fast-check';
+import { TestBed } from "@angular/core/testing";
+import { BehaviorSubject } from "rxjs";
+import * as fc from "fast-check";
 
-import { TodoFacade } from './todo.facade';
-import { TodoStore } from './todo.store';
-import { Todo, TodoState, Action } from '../../models/todo.model';
-import { TodoActionTypes } from './todo.actions';
+import { TodoFacade } from "./todo.facade";
+import { TodoStore } from "./todo.store";
+import { Todo, TodoState, Action } from "../../models/todo.model";
+import { TodoActionTypes } from "./todo.actions";
 
-describe('TodoFacade', () => {
+describe("TodoFacade", () => {
   let facade: TodoFacade;
   let mockStore: jasmine.SpyObj<TodoStore>;
   let dispatchedActions: Action[];
 
   // Mock state
   const mockTodos: Todo[] = [
-    { id: '1', title: 'First Todo', completed: false },
-    { id: '2', title: 'Second Todo', completed: true },
+    { id: "1", title: "First Todo", completed: false },
+    { id: "2", title: "Second Todo", completed: true },
   ];
 
   const mockState: TodoState = {
@@ -36,20 +36,20 @@ describe('TodoFacade', () => {
     errorSubject = new BehaviorSubject<string | null>(null);
 
     // Create mock store
-    mockStore = jasmine.createSpyObj('TodoStore', ['dispatch', 'getState']);
+    mockStore = jasmine.createSpyObj("TodoStore", ["dispatch", "getState"]);
     mockStore.dispatch.and.callFake((action: Action) => {
       dispatchedActions.push(action);
     });
     mockStore.getState.and.returnValue(mockState);
 
     // Set up observable properties
-    Object.defineProperty(mockStore, 'todos$', {
+    Object.defineProperty(mockStore, "todos$", {
       get: () => todosSubject.asObservable(),
     });
-    Object.defineProperty(mockStore, 'loading$', {
+    Object.defineProperty(mockStore, "loading$", {
       get: () => loadingSubject.asObservable(),
     });
-    Object.defineProperty(mockStore, 'error$', {
+    Object.defineProperty(mockStore, "error$", {
       get: () => errorSubject.asObservable(),
     });
 
@@ -60,12 +60,12 @@ describe('TodoFacade', () => {
     facade = TestBed.inject(TodoFacade);
   });
 
-  describe('Initialization', () => {
-    it('should be created', () => {
+  describe("Initialization", () => {
+    it("should be created", () => {
       expect(facade).toBeTruthy();
     });
 
-    it('should dispatch loadTodos on construction', () => {
+    it("should dispatch loadTodos on construction", () => {
       // Arrange - facade already created in beforeEach
       // Assert - loadTodos should have been dispatched
       expect(
@@ -73,7 +73,7 @@ describe('TodoFacade', () => {
       ).toBe(true);
     });
 
-    it('should expose todos$ from store', (done) => {
+    it("should expose todos$ from store", (done) => {
       // Arrange & Act
       facade.todos$.subscribe((todos) => {
         // Assert
@@ -82,7 +82,7 @@ describe('TodoFacade', () => {
       });
     });
 
-    it('should expose loading$ from store', (done) => {
+    it("should expose loading$ from store", (done) => {
       // Arrange & Act
       facade.loading$.subscribe((loading) => {
         // Assert
@@ -91,7 +91,7 @@ describe('TodoFacade', () => {
       });
     });
 
-    it('should expose error$ from store', (done) => {
+    it("should expose error$ from store", (done) => {
       // Arrange & Act
       facade.error$.subscribe((error) => {
         // Assert
@@ -101,8 +101,8 @@ describe('TodoFacade', () => {
     });
   });
 
-  describe('loadTodos', () => {
-    it('should dispatch LOAD_TODOS action', () => {
+  describe("loadTodos", () => {
+    it("should dispatch LOAD_TODOS action", () => {
       // Arrange
       dispatchedActions = [];
       // Act
@@ -113,11 +113,11 @@ describe('TodoFacade', () => {
     });
   });
 
-  describe('addTodo', () => {
-    it('should dispatch ADD_TODO action with title', () => {
+  describe("addTodo", () => {
+    it("should dispatch ADD_TODO action with title", () => {
       // Arrange
       dispatchedActions = [];
-      const title = 'New Todo';
+      const title = "New Todo";
       // Act
       facade.addTodo(title);
       // Assert
@@ -127,12 +127,12 @@ describe('TodoFacade', () => {
     });
   });
 
-  describe('updateTodo', () => {
-    it('should dispatch UPDATE_TODO action with id and updates', () => {
+  describe("updateTodo", () => {
+    it("should dispatch UPDATE_TODO action with id and updates", () => {
       // Arrange
       dispatchedActions = [];
-      const id = '1';
-      const updates = { title: 'Updated Title' };
+      const id = "1";
+      const updates = { title: "Updated Title" };
       // Act
       facade.updateTodo(id, updates);
       // Assert
@@ -142,40 +142,40 @@ describe('TodoFacade', () => {
     });
   });
 
-  describe('toggleTodo', () => {
-    it('should dispatch UPDATE_TODO action with toggled completed status', () => {
+  describe("toggleTodo", () => {
+    it("should dispatch UPDATE_TODO action with toggled completed status", () => {
       // Arrange
       dispatchedActions = [];
-      const id = '1'; // This todo has completed: false
+      const id = "1"; // This todo has completed: false
       // Act
       facade.toggleTodo(id);
       // Assert
       expect(dispatchedActions.length).toBe(1);
       expect(dispatchedActions[0].type).toBe(TodoActionTypes.UPDATE_TODO);
       expect(dispatchedActions[0].payload).toEqual({
-        id: '1',
+        id: "1",
         updates: { completed: true }, // Toggled from false to true
       });
     });
 
-    it('should toggle completed from true to false', () => {
+    it("should toggle completed from true to false", () => {
       // Arrange
       dispatchedActions = [];
-      const id = '2'; // This todo has completed: true
+      const id = "2"; // This todo has completed: true
       // Act
       facade.toggleTodo(id);
       // Assert
       expect(dispatchedActions.length).toBe(1);
       expect(dispatchedActions[0].payload).toEqual({
-        id: '2',
+        id: "2",
         updates: { completed: false }, // Toggled from true to false
       });
     });
 
-    it('should not dispatch action if todo not found', () => {
+    it("should not dispatch action if todo not found", () => {
       // Arrange
       dispatchedActions = [];
-      const id = 'non-existent-id';
+      const id = "non-existent-id";
       // Act
       facade.toggleTodo(id);
       // Assert
@@ -183,11 +183,11 @@ describe('TodoFacade', () => {
     });
   });
 
-  describe('deleteTodo', () => {
-    it('should dispatch DELETE_TODO action with id', () => {
+  describe("deleteTodo", () => {
+    it("should dispatch DELETE_TODO action with id", () => {
       // Arrange
       dispatchedActions = [];
-      const id = '1';
+      const id = "1";
       // Act
       facade.deleteTodo(id);
       // Assert
@@ -201,7 +201,7 @@ describe('TodoFacade', () => {
 /**
  * Property-based tests for TodoFacade
  */
-describe('TodoFacade Property Tests', () => {
+describe("TodoFacade Property Tests", () => {
   // Arbitrary for generating valid Todo objects
   const todoArbitrary = fc.record({
     id: fc.uuid(),
@@ -226,19 +226,19 @@ describe('TodoFacade Property Tests', () => {
     const loadingSubject = new BehaviorSubject<boolean>(false);
     const errorSubject = new BehaviorSubject<string | null>(null);
 
-    mockStore = jasmine.createSpyObj('TodoStore', ['dispatch', 'getState']);
+    mockStore = jasmine.createSpyObj("TodoStore", ["dispatch", "getState"]);
     mockStore.dispatch.and.callFake((action: Action) => {
       dispatchedActions.push(action);
     });
     mockStore.getState.and.returnValue({ todos, loading: false, error: null });
 
-    Object.defineProperty(mockStore, 'todos$', {
+    Object.defineProperty(mockStore, "todos$", {
       get: () => todosSubject.asObservable(),
     });
-    Object.defineProperty(mockStore, 'loading$', {
+    Object.defineProperty(mockStore, "loading$", {
       get: () => loadingSubject.asObservable(),
     });
-    Object.defineProperty(mockStore, 'error$', {
+    Object.defineProperty(mockStore, "error$", {
       get: () => errorSubject.asObservable(),
     });
 
@@ -250,7 +250,7 @@ describe('TodoFacade Property Tests', () => {
     return TestBed.inject(TodoFacade);
   }
 
-  it('should dispatch ADD_TODO with correct title for any valid title', () => {
+  it("should dispatch ADD_TODO with correct title for any valid title", () => {
     fc.assert(
       fc.property(titleArbitrary, (title: string) => {
         const facade = createFacade([]);
@@ -269,7 +269,7 @@ describe('TodoFacade Property Tests', () => {
     );
   });
 
-  it('should dispatch UPDATE_TODO with correct id and updates for any valid input', () => {
+  it("should dispatch UPDATE_TODO with correct id and updates for any valid input", () => {
     fc.assert(
       fc.property(
         fc.uuid(),
@@ -295,7 +295,7 @@ describe('TodoFacade Property Tests', () => {
     );
   });
 
-  it('should dispatch DELETE_TODO with correct id for any valid id', () => {
+  it("should dispatch DELETE_TODO with correct id for any valid id", () => {
     fc.assert(
       fc.property(fc.uuid(), (id: string) => {
         const facade = createFacade([]);
@@ -314,7 +314,7 @@ describe('TodoFacade Property Tests', () => {
     );
   });
 
-  it('should toggle completed status correctly for any todo in state', () => {
+  it("should toggle completed status correctly for any todo in state", () => {
     fc.assert(
       fc.property(
         fc.array(todoArbitrary, { minLength: 1, maxLength: 10 }),

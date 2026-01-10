@@ -14,10 +14,10 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-} from '@angular/core';
+} from "@angular/core";
 
-import { TodoItemComponent } from '../todo-item/todo-item.component';
-import { Todo } from '../../models/todo.model';
+import { TodoItemComponent } from "../todo-item/todo-item.component";
+import { Todo } from "../../models/todo.model";
 
 /**
  * TodoListComponent - Presentational Component
@@ -32,11 +32,11 @@ import { Todo } from '../../models/todo.model';
  * All communication is via @Input and @Output only.
  */
 @Component({
-  selector: 'app-todo-list',
+  selector: "app-todo-list",
   standalone: true,
   imports: [TodoItemComponent],
-  templateUrl: './todo-list.component.html',
-  styleUrl: './todo-list.component.css',
+  templateUrl: "./todo-list.component.html",
+  styleUrl: "./todo-list.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoListComponent {
@@ -54,11 +54,11 @@ export class TodoListComponent {
 
   /**
    * TrackBy function for optimal rendering performance
-   * @param index - Index of the item
+   * @param _ - Index of the item (unused)
    * @param todo - Todo item
    * @returns Unique identifier for the todo
    */
-  trackByTodoId(index: number, todo: Todo): string {
+  trackByTodoId(_: number, todo: Todo): string {
     return todo.id;
   }
 

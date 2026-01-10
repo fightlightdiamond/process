@@ -5,11 +5,12 @@
  * @Author        developer
  * @CreatedDate   2026-01-09
  * @Updater       developer
- * @LastUpdated   2026-01-09
+ * @LastUpdated   2026-01-10
  */
 
-import { Action, Todo, TodoState } from '../../models/todo.model';
-import { TodoActionTypes } from './todo.actions';
+import { Action, Todo, TodoState } from "../../models/todo.model";
+import { TodoActionTypes } from "./todo.actions";
+import { isTodo, isTodoArray, TODO_ERROR_MESSAGES } from "../../shared";
 
 /**
  * Initial state for the todo store.
@@ -34,6 +35,8 @@ export const initialState: TodoState = {
  * IMPORTANT: This reducer is a pure function - it never mutates the input state.
  * Always returns a new state object using spread operator.
  *
+ * SECURITY: Uses type guards to validate payload before processing.
+ *
  * @param state - Current state (defaults to initialState)
  * @param action - Action to process
  * @returns New state
@@ -51,19 +54,30 @@ export function todoReducer(
         error: null, // Clear any previous error
       };
 
-    case TodoActionTypes.LOAD_TODOS_SUCCESS:
+    case TodoActionTypes.LOAD_TODOS_SUCCESS: {
+      // Validate payload is a valid Todo array
+      if (!isTodoArray(action.payload)) {
+        console.error("Invalid payload for LOAD_TODOS_SUCCESS");
+        return {
+          ...state,
+          loading: false,
+          error: TODO_ERROR_MESSAGES.INVALID_DATA,
+        };
+      }
       return {
         ...state,
-        todos: action.payload as Todo[], // Replace entire todos array
+        todos: action.payload,
         loading: false,
         error: null,
       };
+    }
 
     case TodoActionTypes.LOAD_TODOS_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload as string,
+        error:
+          typeof action.payload === "string" ? action.payload : "Unknown error",
       };
 
     // ==================== ADD TODO ====================
@@ -74,19 +88,30 @@ export function todoReducer(
         error: null,
       };
 
-    case TodoActionTypes.ADD_TODO_SUCCESS:
+    case TodoActionTypes.ADD_TODO_SUCCESS: {
+      // Validate payload is a valid Todo
+      if (!isTodo(action.payload)) {
+        console.error("Invalid payload for ADD_TODO_SUCCESS");
+        return {
+          ...state,
+          loading: false,
+          error: TODO_ERROR_MESSAGES.INVALID_DATA,
+        };
+      }
       return {
         ...state,
-        todos: [...state.todos, action.payload as Todo], // Append new todo to end
+        todos: [...state.todos, action.payload],
         loading: false,
         error: null,
       };
+    }
 
     case TodoActionTypes.ADD_TODO_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload as string,
+        error:
+          typeof action.payload === "string" ? action.payload : "Unknown error",
       };
 
     // ==================== UPDATE TODO ====================
@@ -97,8 +122,17 @@ export function todoReducer(
         error: null,
       };
 
-    case TodoActionTypes.UPDATE_TODO_SUCCESS:
-      const updatedTodo = action.payload as Todo;
+    case TodoActionTypes.UPDATE_TODO_SUCCESS: {
+      // Validate payload is a valid Todo
+      if (!isTodo(action.payload)) {
+        console.error("Invalid payload for UPDATE_TODO_SUCCESS");
+        return {
+          ...state,
+          loading: false,
+          error: TODO_ERROR_MESSAGES.INVALID_DATA,
+        };
+      }
+      const updatedTodo = action.payload;
       return {
         ...state,
         // Map through todos and replace the one with matching id
@@ -108,12 +142,14 @@ export function todoReducer(
         loading: false,
         error: null,
       };
+    }
 
     case TodoActionTypes.UPDATE_TODO_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload as string,
+        error:
+          typeof action.payload === "string" ? action.payload : "Unknown error",
       };
 
     // ==================== DELETE TODO ====================
@@ -124,8 +160,17 @@ export function todoReducer(
         error: null,
       };
 
-    case TodoActionTypes.DELETE_TODO_SUCCESS:
-      const deletedId = action.payload as string;
+    case TodoActionTypes.DELETE_TODO_SUCCESS: {
+      const deletedId = action.payload;
+      // Validate payload is a string
+      if (typeof deletedId !== "string") {
+        console.error("Invalid payload for DELETE_TODO_SUCCESS");
+        return {
+          ...state,
+          loading: false,
+          error: TODO_ERROR_MESSAGES.INVALID_DATA_SHORT,
+        };
+      }
       return {
         ...state,
         // Filter out the deleted todo
@@ -133,12 +178,14 @@ export function todoReducer(
         loading: false,
         error: null,
       };
+    }
 
     case TodoActionTypes.DELETE_TODO_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload as string,
+        error:
+          typeof action.payload === "string" ? action.payload : "Unknown error",
       };
 
     // ==================== DEFAULT ====================

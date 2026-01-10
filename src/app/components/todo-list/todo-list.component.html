@@ -1,29 +1,30 @@
 <div class="todo-list-container">
   <!-- Loading indicator -->
   @if (loading) {
-  <div class="loading-indicator">
-    <i class="pi pi-spin pi-spinner"></i>
-    <span>Loading todos...</span>
-  </div>
+    <div class="loading-indicator">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Loading todos...</span>
+    </div>
   } @else {
-  <!-- Empty state -->
-  @if (todos.length === 0) {
-  <div class="empty-state">
-    <i class="pi pi-inbox"></i>
-    <p>No todos yet. Add one above!</p>
-  </div>
-  } @else {
-  <!-- Todo list -->
-  <div class="todo-list">
-    @for (todo of todos; track todo.id) {
-    <app-todo-item
-      [todo]="todo"
-      (toggle)="onToggle($event)"
-      (delete)="onDelete($event)"
-      (update)="onUpdate($event)"
-      (editInForm)="onEditInForm($event)"
-    ></app-todo-item>
+    <!-- Empty state -->
+    @if (todos.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>No todos yet. Add one above!</p>
+      </div>
+    } @else {
+      <!-- Todo list -->
+      <div class="todo-list">
+        @for (todo of todos; track todo.id) {
+          <app-todo-item
+            [todo]="todo"
+            (toggle)="onToggle($event)"
+            (delete)="onDelete($event)"
+            (update)="onUpdate($event)"
+            (editInForm)="onEditInForm($event)"
+          ></app-todo-item>
+        }
+      </div>
     }
-  </div>
-  } }
+  }
 </div>

@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+import * as fc from "fast-check";
 import {
   TodoActionTypes,
   loadTodos,
@@ -13,11 +13,11 @@ import {
   deleteTodo,
   deleteTodoSuccess,
   deleteTodoFailure,
-} from './todo.actions';
-import { Todo } from '../../models/todo.model';
+} from "./todo.actions";
+import { Todo } from "../../models/todo.model";
 
-describe('Todo Actions', () => {
-  describe('Property Tests', () => {
+describe("Todo Actions", () => {
+  describe("Property Tests", () => {
     /**
      * Feature: json-server-rxjs-store, Property 1: Action creators return correct structure
      * For any action creator function and any valid payload, the returned action object
@@ -25,7 +25,7 @@ describe('Todo Actions', () => {
      * property (if provided) containing the input data.
      * Validates: Requirements 2.3
      */
-    it('Property 1: Action creators return correct structure', () => {
+    it("Property 1: Action creators return correct structure", () => {
       // Test loadTodos (no payload)
       const loadAction = loadTodos();
       expect(loadAction.type).toBe(TodoActionTypes.LOAD_TODOS);
@@ -197,31 +197,31 @@ describe('Todo Actions', () => {
     });
   });
 
-  describe('Unit Tests', () => {
-    it('should define all action type constants', () => {
-      expect(TodoActionTypes.LOAD_TODOS).toBe('[Todo] Load Todos');
+  describe("Unit Tests", () => {
+    it("should define all action type constants", () => {
+      expect(TodoActionTypes.LOAD_TODOS).toBe("[Todo] Load Todos");
       expect(TodoActionTypes.LOAD_TODOS_SUCCESS).toBe(
-        '[Todo] Load Todos Success'
+        "[Todo] Load Todos Success"
       );
       expect(TodoActionTypes.LOAD_TODOS_FAILURE).toBe(
-        '[Todo] Load Todos Failure'
+        "[Todo] Load Todos Failure"
       );
-      expect(TodoActionTypes.ADD_TODO).toBe('[Todo] Add Todo');
-      expect(TodoActionTypes.ADD_TODO_SUCCESS).toBe('[Todo] Add Todo Success');
-      expect(TodoActionTypes.ADD_TODO_FAILURE).toBe('[Todo] Add Todo Failure');
-      expect(TodoActionTypes.UPDATE_TODO).toBe('[Todo] Update Todo');
+      expect(TodoActionTypes.ADD_TODO).toBe("[Todo] Add Todo");
+      expect(TodoActionTypes.ADD_TODO_SUCCESS).toBe("[Todo] Add Todo Success");
+      expect(TodoActionTypes.ADD_TODO_FAILURE).toBe("[Todo] Add Todo Failure");
+      expect(TodoActionTypes.UPDATE_TODO).toBe("[Todo] Update Todo");
       expect(TodoActionTypes.UPDATE_TODO_SUCCESS).toBe(
-        '[Todo] Update Todo Success'
+        "[Todo] Update Todo Success"
       );
       expect(TodoActionTypes.UPDATE_TODO_FAILURE).toBe(
-        '[Todo] Update Todo Failure'
+        "[Todo] Update Todo Failure"
       );
-      expect(TodoActionTypes.DELETE_TODO).toBe('[Todo] Delete Todo');
+      expect(TodoActionTypes.DELETE_TODO).toBe("[Todo] Delete Todo");
       expect(TodoActionTypes.DELETE_TODO_SUCCESS).toBe(
-        '[Todo] Delete Todo Success'
+        "[Todo] Delete Todo Success"
       );
       expect(TodoActionTypes.DELETE_TODO_FAILURE).toBe(
-        '[Todo] Delete Todo Failure'
+        "[Todo] Delete Todo Failure"
       );
     });
   });

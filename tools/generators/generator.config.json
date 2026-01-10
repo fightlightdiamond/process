@@ -1,0 +1,22 @@
+{
+  "project": {
+    "name": "NgSSR Todo App",
+    "prefix": "app"
+  },
+  "author": {
+    "default": "developer",
+    "updater": "developer"
+  },
+  "paths": {
+    "models": "src/app/models",
+    "services": "src/app/services",
+    "store": "src/app/store",
+    "components": "src/app/components"
+  },
+  "api": {
+    "baseUrl": "http://localhost:3000"
+  },
+  "fileHeader": {
+    "enabled": true
+  }
+}

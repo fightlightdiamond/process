@@ -8,7 +8,7 @@
  * @LastUpdated   2026-01-09
  */
 
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from "@angular/forms";
 
 /**
  * Custom validator to reject whitespace-only strings.

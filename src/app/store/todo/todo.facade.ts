@@ -8,12 +8,12 @@
  * @LastUpdated   2026-01-09
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
-import { Todo } from '../../models/todo.model';
-import { TodoStore } from './todo.store';
-import { loadTodos, addTodo, updateTodo, deleteTodo } from './todo.actions';
+import { Todo } from "../../models/todo.model";
+import { TodoStore } from "./todo.store";
+import { loadTodos, addTodo, updateTodo, deleteTodo } from "./todo.actions";
 
 /**
  * TodoFacade - Provides a simplified API for components to interact with todo state.
@@ -27,7 +27,7 @@ import { loadTodos, addTodo, updateTodo, deleteTodo } from './todo.actions';
  * Components should ONLY interact with state through this facade.
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class TodoFacade {
   /**

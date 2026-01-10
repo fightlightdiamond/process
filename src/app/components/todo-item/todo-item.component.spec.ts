@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import * as fc from 'fast-check';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule } from "@angular/forms";
+import { By } from "@angular/platform-browser";
+import * as fc from "fast-check";
 
-import { TodoItemComponent } from './todo-item.component';
-import { Todo } from '../../models/todo.model';
+import { TodoItemComponent } from "./todo-item.component";
+import { Todo } from "../../models/todo.model";
 
 // Arbitrary for generating valid Todo objects
 const todoArbitrary = fc.record({
@@ -23,19 +23,19 @@ const validTitleArbitrary = fc
   .filter((s) => s.trim().length > 0)
   .map((s) => s.trim()); // Trim to avoid whitespace comparison issues
 
-describe('TodoItemComponent', () => {
+describe("TodoItemComponent", () => {
   let component: TodoItemComponent;
   let fixture: ComponentFixture<TodoItemComponent>;
 
   const mockTodo: Todo = {
-    id: '1',
-    title: 'Test Todo',
+    id: "1",
+    title: "Test Todo",
     completed: false,
   };
 
   const completedTodo: Todo = {
-    id: '2',
-    title: 'Completed Todo',
+    id: "2",
+    title: "Completed Todo",
     completed: true,
   };
 
@@ -50,15 +50,15 @@ describe('TodoItemComponent', () => {
     fixture.detectChanges();
   });
 
-  describe('Component Creation', () => {
-    it('should create the component', () => {
+  describe("Component Creation", () => {
+    it("should create the component", () => {
       // Arrange - done in beforeEach
       // Act - component created in beforeEach
       // Assert
       expect(component).toBeTruthy();
     });
 
-    it('should be a presentational component (no service injection)', () => {
+    it("should be a presentational component (no service injection)", () => {
       // Arrange - done in beforeEach
       // Act - component created in beforeEach
       // Assert - Verify component has no injected services by checking constructor
@@ -71,89 +71,89 @@ describe('TodoItemComponent', () => {
     });
   });
 
-  describe('Rendering with different todo inputs', () => {
-    it('should display todo title', () => {
+  describe("Rendering with different todo inputs", () => {
+    it("should display todo title", () => {
       // Arrange - done in beforeEach with mockTodo
       // Act
-      const titleElement = fixture.debugElement.query(By.css('.todo-title'));
+      const titleElement = fixture.debugElement.query(By.css(".todo-title"));
       // Assert
-      expect(titleElement.nativeElement.textContent.trim()).toBe('Test Todo');
+      expect(titleElement.nativeElement.textContent.trim()).toBe("Test Todo");
     });
 
-    it('should display completed todo with completed class', () => {
+    it("should display completed todo with completed class", () => {
       // Arrange
       component.todo = completedTodo;
       // Act
       fixture.detectChanges();
-      const todoItem = fixture.debugElement.query(By.css('.todo-item'));
+      const todoItem = fixture.debugElement.query(By.css(".todo-item"));
       // Assert
-      expect(todoItem.classes['completed']).toBe(true);
+      expect(todoItem.classes["completed"]).toBe(true);
     });
 
-    it('should display incomplete todo without completed class', () => {
+    it("should display incomplete todo without completed class", () => {
       // Arrange - done in beforeEach with incomplete mockTodo
       // Act
-      const todoItem = fixture.debugElement.query(By.css('.todo-item'));
+      const todoItem = fixture.debugElement.query(By.css(".todo-item"));
       // Assert
-      expect(todoItem.classes['completed']).toBeFalsy();
+      expect(todoItem.classes["completed"]).toBeFalsy();
     });
 
-    it('should apply completed-text class to completed todo title', () => {
+    it("should apply completed-text class to completed todo title", () => {
       // Arrange
       component.todo = completedTodo;
       fixture.detectChanges();
       // Act
-      const titleElement = fixture.debugElement.query(By.css('.todo-title'));
+      const titleElement = fixture.debugElement.query(By.css(".todo-title"));
       // Assert
-      expect(titleElement.classes['completed-text']).toBe(true);
+      expect(titleElement.classes["completed-text"]).toBe(true);
     });
   });
 
-  describe('Event emissions', () => {
-    it('should emit toggle event with todo id when checkbox clicked', () => {
+  describe("Event emissions", () => {
+    it("should emit toggle event with todo id when checkbox clicked", () => {
       // Arrange
-      spyOn(component.toggle, 'emit');
+      spyOn(component.toggle, "emit");
       // Act
       component.onToggle();
       // Assert
-      expect(component.toggle.emit).toHaveBeenCalledWith('1');
+      expect(component.toggle.emit).toHaveBeenCalledWith("1");
     });
 
-    it('should emit delete event with todo id when delete button clicked', () => {
+    it("should emit delete event with todo id when delete button clicked", () => {
       // Arrange
-      spyOn(component.delete, 'emit');
+      spyOn(component.delete, "emit");
       // Act
       component.onDelete();
       // Assert
-      expect(component.delete.emit).toHaveBeenCalledWith('1');
+      expect(component.delete.emit).toHaveBeenCalledWith("1");
     });
 
-    it('should emit editInForm event with todo object when edit button clicked', () => {
+    it("should emit editInForm event with todo object when edit button clicked", () => {
       // Arrange
-      spyOn(component.editInForm, 'emit');
+      spyOn(component.editInForm, "emit");
       // Act
       component.onEditInForm();
       // Assert
       expect(component.editInForm.emit).toHaveBeenCalledWith(mockTodo);
     });
 
-    it('should emit update event with id and new title when inline edit saved', () => {
+    it("should emit update event with id and new title when inline edit saved", () => {
       // Arrange
-      spyOn(component.update, 'emit');
+      spyOn(component.update, "emit");
       component.onStartInlineEdit();
-      component.editTitle = 'Updated Title';
+      component.editTitle = "Updated Title";
       // Act
       component.onSaveInlineEdit();
       // Assert
       expect(component.update.emit).toHaveBeenCalledWith({
-        id: '1',
-        title: 'Updated Title',
+        id: "1",
+        title: "Updated Title",
       });
     });
 
-    it('should not emit update event if title unchanged', () => {
+    it("should not emit update event if title unchanged", () => {
       // Arrange
-      spyOn(component.update, 'emit');
+      spyOn(component.update, "emit");
       component.onStartInlineEdit();
       // editTitle is set to original title
       // Act
@@ -162,11 +162,11 @@ describe('TodoItemComponent', () => {
       expect(component.update.emit).not.toHaveBeenCalled();
     });
 
-    it('should not emit update event if title is empty after trim', () => {
+    it("should not emit update event if title is empty after trim", () => {
       // Arrange
-      spyOn(component.update, 'emit');
+      spyOn(component.update, "emit");
       component.onStartInlineEdit();
-      component.editTitle = '   ';
+      component.editTitle = "   ";
       // Act
       component.onSaveInlineEdit();
       // Assert
@@ -174,18 +174,18 @@ describe('TodoItemComponent', () => {
     });
   });
 
-  describe('Inline editing', () => {
-    it('should enter edit mode on double-click', () => {
+  describe("Inline editing", () => {
+    it("should enter edit mode on double-click", () => {
       // Arrange
       expect(component.isEditing).toBe(false);
       // Act
       component.onStartInlineEdit();
       // Assert
       expect(component.isEditing).toBe(true);
-      expect(component.editTitle).toBe('Test Todo');
+      expect(component.editTitle).toBe("Test Todo");
     });
 
-    it('should exit edit mode on save', () => {
+    it("should exit edit mode on save", () => {
       // Arrange
       component.onStartInlineEdit();
       expect(component.isEditing).toBe(true);
@@ -193,74 +193,74 @@ describe('TodoItemComponent', () => {
       component.onSaveInlineEdit();
       // Assert
       expect(component.isEditing).toBe(false);
-      expect(component.editTitle).toBe('');
+      expect(component.editTitle).toBe("");
     });
 
-    it('should exit edit mode on cancel', () => {
+    it("should exit edit mode on cancel", () => {
       // Arrange
       component.onStartInlineEdit();
-      component.editTitle = 'Changed';
+      component.editTitle = "Changed";
       // Act
       component.cancelInlineEdit();
       // Assert
       expect(component.isEditing).toBe(false);
-      expect(component.editTitle).toBe('');
+      expect(component.editTitle).toBe("");
     });
 
-    it('should save on Enter key', () => {
+    it("should save on Enter key", () => {
       // Arrange
-      spyOn(component, 'onSaveInlineEdit');
+      spyOn(component, "onSaveInlineEdit");
       // Act
-      component.onEditKeydown({ key: 'Enter' } as KeyboardEvent);
+      component.onEditKeydown({ key: "Enter" } as KeyboardEvent);
       // Assert
       expect(component.onSaveInlineEdit).toHaveBeenCalled();
     });
 
-    it('should cancel on Escape key', () => {
+    it("should cancel on Escape key", () => {
       // Arrange
-      spyOn(component, 'cancelInlineEdit');
+      spyOn(component, "cancelInlineEdit");
       // Act
-      component.onEditKeydown({ key: 'Escape' } as KeyboardEvent);
+      component.onEditKeydown({ key: "Escape" } as KeyboardEvent);
       // Assert
       expect(component.cancelInlineEdit).toHaveBeenCalled();
     });
 
-    it('should show input field when editing', () => {
+    it("should show input field when editing", () => {
       // Arrange
       component.onStartInlineEdit();
       // Act
       fixture.detectChanges();
-      const editInput = fixture.debugElement.query(By.css('.edit-input'));
-      const titleSpan = fixture.debugElement.query(By.css('.todo-title'));
+      const editInput = fixture.debugElement.query(By.css(".edit-input"));
+      const titleSpan = fixture.debugElement.query(By.css(".todo-title"));
       // Assert
       expect(editInput).toBeTruthy();
       expect(titleSpan).toBeFalsy();
     });
 
-    it('should show title span when not editing', () => {
+    it("should show title span when not editing", () => {
       // Arrange - done in beforeEach (not editing by default)
       // Act
-      const editInput = fixture.debugElement.query(By.css('.edit-input'));
-      const titleSpan = fixture.debugElement.query(By.css('.todo-title'));
+      const editInput = fixture.debugElement.query(By.css(".edit-input"));
+      const titleSpan = fixture.debugElement.query(By.css(".todo-title"));
       // Assert
       expect(editInput).toBeFalsy();
       expect(titleSpan).toBeTruthy();
     });
   });
 
-  describe('Action buttons', () => {
-    it('should have edit button', () => {
+  describe("Action buttons", () => {
+    it("should have edit button", () => {
       // Arrange - done in beforeEach
       // Act
-      const editBtn = fixture.debugElement.query(By.css('.edit-btn'));
+      const editBtn = fixture.debugElement.query(By.css(".edit-btn"));
       // Assert
       expect(editBtn).toBeTruthy();
     });
 
-    it('should have delete button', () => {
+    it("should have delete button", () => {
       // Arrange - done in beforeEach
       // Act
-      const deleteBtn = fixture.debugElement.query(By.css('.delete-btn'));
+      const deleteBtn = fixture.debugElement.query(By.css(".delete-btn"));
       // Assert
       expect(deleteBtn).toBeTruthy();
     });
@@ -276,7 +276,7 @@ describe('TodoItemComponent', () => {
  * (toggle, delete, update, editInForm), THE TodoItemComponent SHALL emit events
  * containing the correct todo id and/or data.
  */
-describe('Property 2: TodoItem input/output consistency', () => {
+describe("Property 2: TodoItem input/output consistency", () => {
   // Helper function to create a fresh component for each property test iteration
   function createComponent(todo: Todo): {
     component: TodoItemComponent;
@@ -295,22 +295,22 @@ describe('Property 2: TodoItem input/output consistency', () => {
     }).compileComponents();
   });
 
-  it('should correctly display any valid todo title and completed status', () => {
+  it("should correctly display any valid todo title and completed status", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { fixture } = createComponent(todo);
 
         // Verify title is displayed correctly
-        const titleElement = fixture.debugElement.query(By.css('.todo-title'));
+        const titleElement = fixture.debugElement.query(By.css(".todo-title"));
         expect(titleElement.nativeElement.textContent.trim()).toBe(todo.title);
 
         // Verify completed status is reflected in CSS class
         // Note: Angular returns undefined for false boolean class bindings, so we check for truthy/falsy
-        const todoItem = fixture.debugElement.query(By.css('.todo-item'));
+        const todoItem = fixture.debugElement.query(By.css(".todo-item"));
         if (todo.completed) {
-          expect(todoItem.classes['completed']).toBe(true);
+          expect(todoItem.classes["completed"]).toBe(true);
         } else {
-          expect(todoItem.classes['completed']).toBeFalsy();
+          expect(todoItem.classes["completed"]).toBeFalsy();
         }
 
         fixture.destroy();
@@ -319,7 +319,7 @@ describe('Property 2: TodoItem input/output consistency', () => {
     );
   });
 
-  it('should emit toggle event with correct todo id for any todo', () => {
+  it("should emit toggle event with correct todo id for any todo", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent(todo);
@@ -340,7 +340,7 @@ describe('Property 2: TodoItem input/output consistency', () => {
     );
   });
 
-  it('should emit delete event with correct todo id for any todo', () => {
+  it("should emit delete event with correct todo id for any todo", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent(todo);
@@ -361,7 +361,7 @@ describe('Property 2: TodoItem input/output consistency', () => {
     );
   });
 
-  it('should emit editInForm event with correct todo object for any todo', () => {
+  it("should emit editInForm event with correct todo object for any todo", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent(todo);
@@ -382,7 +382,7 @@ describe('Property 2: TodoItem input/output consistency', () => {
     );
   });
 
-  it('should emit update event with correct id and new title when inline edit saved', () => {
+  it("should emit update event with correct id and new title when inline edit saved", () => {
     fc.assert(
       fc.property(
         todoArbitrary,
@@ -418,7 +418,7 @@ describe('Property 2: TodoItem input/output consistency', () => {
     );
   });
 
-  it('should populate editTitle with todo title when starting inline edit for any todo', () => {
+  it("should populate editTitle with todo title when starting inline edit for any todo", () => {
     fc.assert(
       fc.property(todoArbitrary, (todo: Todo) => {
         const { component, fixture } = createComponent(todo);
