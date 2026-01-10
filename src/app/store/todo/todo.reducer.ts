@@ -8,7 +8,7 @@
  * @LastUpdated   2026-01-10
  */
 
-import { Action, Todo, TodoState } from "../../models/todo.model";
+import { Action, TodoState } from "../../models/todo.model";
 import { TodoActionTypes } from "./todo.actions";
 import { isTodo, isTodoArray, TODO_ERROR_MESSAGES } from "../../shared";
 

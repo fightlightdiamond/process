@@ -76,10 +76,10 @@ export class TodoFormComponent implements OnChanges {
   @Input() editingTodo: Todo | null = null;
 
   /** Output: Emits trimmed title string when form is submitted */
-  @Output() submitTodo = new EventEmitter<string>();
+  @Output() readonly submitTodo = new EventEmitter<string>();
 
   /** Output: Emits when user cancels edit mode */
-  @Output() cancelEdit = new EventEmitter<void>();
+  @Output() readonly cancelEdit = new EventEmitter<void>();
 
   /** Maximum length for title (exposed for template) */
   readonly maxTitleLength = TODO_VALIDATION.TITLE_MAX_LENGTH;

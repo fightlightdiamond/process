@@ -26,7 +26,7 @@
       (keydown)="onEditKeydown($event)"
       (blur)="onSaveInlineEdit()"
       class="edit-input"
-      autofocus
+      #editInput
     />
   } @else {
     <!-- Title display with double-click to edit -->
@@ -50,7 +50,10 @@
       (click)="onEditInForm()"
       class="edit-btn"
       pTooltip="Edit in form"
-    ></button>
+      aria-label="Edit todo in form"
+    >
+      <span class="sr-only">Edit</span>
+    </button>
     <button
       pButton
       type="button"
@@ -59,6 +62,9 @@
       [text]="true"
       (click)="onDelete()"
       class="delete-btn"
-    ></button>
+      aria-label="Delete todo"
+    >
+      <span class="sr-only">Delete</span>
+    </button>
   </div>
 </div>

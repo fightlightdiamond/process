@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TodoContainerComponent } from "./components/todo-container/todo-container.component";
 
@@ -8,6 +8,7 @@ import { TodoContainerComponent } from "./components/todo-container/todo-contain
   imports: [RouterOutlet, TodoContainerComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = "RxJS Todo App";

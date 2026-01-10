@@ -20,7 +20,7 @@ export interface TodoState {
   error: string | null;
 }
 
-export interface Action<T = any> {
+export interface Action<T = unknown> {
   type: string;
   payload?: T;
 }

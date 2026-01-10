@@ -1,11 +1,10 @@
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import * as fc from "fast-check";
 
 import { TodoStore } from "./todo.store";
 import { TodoEffects } from "./todo.effects";
-import { TodoApiService } from "../../services/todo-api.service";
-import { Todo, TodoState, Action } from "../../models/todo.model";
+import { Todo, Action } from "../../models/todo.model";
 import {
   TodoActionTypes,
   loadTodosSuccess,

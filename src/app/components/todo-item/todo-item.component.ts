@@ -14,6 +14,9 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -42,19 +45,33 @@ import { Todo } from "../../models/todo.model";
   styleUrl: "./todo-item.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoItemComponent {
+export class TodoItemComponent implements AfterViewChecked {
   // Input: the todo item to display
   @Input({ required: true }) todo!: Todo;
 
   // Output events
-  @Output() toggle = new EventEmitter<string>();
-  @Output() delete = new EventEmitter<string>();
-  @Output() update = new EventEmitter<{ id: string; title: string }>();
-  @Output() editInForm = new EventEmitter<Todo>();
+  @Output() readonly toggle = new EventEmitter<string>();
+  @Output() readonly delete = new EventEmitter<string>();
+  @Output() readonly update = new EventEmitter<{ id: string; title: string }>();
+  @Output() readonly editInForm = new EventEmitter<Todo>();
+
+  // ViewChild for programmatic focus
+  @ViewChild("editInput") editInput?: ElementRef<HTMLInputElement>;
 
   // Internal state for inline editing
   isEditing = false;
   editTitle = "";
+  private shouldFocus = false;
+
+  /**
+   * Focus input after view is checked (when entering edit mode)
+   */
+  ngAfterViewChecked(): void {
+    if (this.shouldFocus && this.editInput) {
+      this.editInput.nativeElement.focus();
+      this.shouldFocus = false;
+    }
+  }
 
   /**
    * Handle checkbox click - emit toggle event
@@ -83,6 +100,7 @@ export class TodoItemComponent {
   onStartInlineEdit(): void {
     this.isEditing = true;
     this.editTitle = this.todo.title;
+    this.shouldFocus = true;
   }
 
   /**

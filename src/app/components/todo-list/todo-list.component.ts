@@ -47,10 +47,10 @@ export class TodoListComponent {
   @Input() loading = false;
 
   // Output events - re-emit from TodoItemComponent
-  @Output() toggle = new EventEmitter<string>();
-  @Output() delete = new EventEmitter<string>();
-  @Output() update = new EventEmitter<{ id: string; title: string }>();
-  @Output() editInForm = new EventEmitter<Todo>();
+  @Output() readonly toggle = new EventEmitter<string>();
+  @Output() readonly delete = new EventEmitter<string>();
+  @Output() readonly update = new EventEmitter<{ id: string; title: string }>();
+  @Output() readonly editInForm = new EventEmitter<Todo>();
 
   /**
    * TrackBy function for optimal rendering performance

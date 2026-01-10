@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
-import { ChangeDetectorRef } from "@angular/core";
 import * as fc from "fast-check";
 
 import { TodoListComponent } from "./todo-list.component";
