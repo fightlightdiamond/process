@@ -1,0 +1,54 @@
+<!-- Page Layout Container -->
+<div
+  class="page-layout"
+  [style.--header-height]="headerHeight"
+  [style.--navigation-height]="navigationHeight"
+  [style.--breadcrumb-height]="breadcrumbHeight"
+  [style.--screen-name-height]="screenNameHeight"
+  [style.--action-area-height]="actionAreaHeight"
+  [style.--footer-height]="footerHeight"
+>
+  <!-- Header Area - Fixed 80px -->
+  <header class="layout-header" data-testid="layout-header">
+    <ng-content select="[header]"></ng-content>
+  </header>
+
+  <!-- Global Navigation Area - Fixed 55px -->
+  <nav class="layout-navigation" data-testid="layout-navigation">
+    <ng-content select="[navigation]"></ng-content>
+  </nav>
+
+  <!-- Breadcrumb Area - Fixed 40px (optional) -->
+  @if (showBreadcrumb) {
+    <div class="layout-breadcrumb" data-testid="layout-breadcrumb">
+      <ng-content select="[breadcrumb]"></ng-content>
+    </div>
+  }
+
+  <!-- Main Content Area - Flexible -->
+  <main class="layout-main" data-testid="layout-main">
+    <!-- Screen Name Display Area - Fixed 100px (optional) -->
+    @if (showScreenName) {
+      <div class="screen-name-area" data-testid="screen-name-area">
+        <ng-content select="[screenName]"></ng-content>
+      </div>
+    }
+
+    <!-- Action Button Area - Fixed 80px (optional) -->
+    @if (showActionArea) {
+      <div class="action-area" data-testid="action-area">
+        <ng-content select="[actions]"></ng-content>
+      </div>
+    }
+
+    <!-- Content Area - Remaining space with scroll -->
+    <div class="content-area" data-testid="content-area">
+      <ng-content select="[content]"></ng-content>
+    </div>
+  </main>
+
+  <!-- Footer Area - Fixed 75px -->
+  <footer class="layout-footer" data-testid="layout-footer">
+    <ng-content select="[footer]"></ng-content>
+  </footer>
+</div>

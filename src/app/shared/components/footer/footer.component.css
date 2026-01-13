@@ -1,0 +1,61 @@
+/**
+ * FooterComponent styles
+ * Implements fixed-height footer area (75px) per Requirements 5.1, 5.2, 5.3
+ * Uses PrimeNG Toolbar with custom styling
+ */
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* PrimeNG Toolbar customization */
+::ng-deep .footer-toolbar {
+  height: 100%;
+  background-color: var(--footer-bg-color, #f8f9fa);
+  border: none;
+  border-top: 1px solid var(--footer-border-color, #e0e0e0);
+  border-radius: 0;
+  padding: 0 16px;
+}
+
+::ng-deep .footer-toolbar .p-toolbar-group-start,
+::ng-deep .footer-toolbar .p-toolbar-group-end {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.footer-copyright {
+  font-size: 0.875rem;
+  color: var(--footer-text-color, #666666);
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-link {
+  font-size: 0.875rem;
+  color: var(--footer-link-color, #1976d2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.footer-link:hover {
+  background-color: var(--footer-link-hover-bg, rgba(25, 118, 210, 0.04));
+  color: var(--footer-link-hover-color, #1565c0);
+}
+
+.footer-link:focus {
+  outline: 2px solid var(--focus-color, #1976d2);
+  outline-offset: 2px;
+  box-shadow: none;
+}

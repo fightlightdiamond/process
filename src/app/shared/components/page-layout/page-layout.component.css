@@ -1,0 +1,114 @@
+/**
+ * Page Layout Component Styles
+ * 
+ * Uses CSS custom properties for height values to enable theming.
+ * Implements flexbox layout for vertical stacking of layout areas.
+ * Reference viewport height: 768px
+ */
+
+/* CSS Custom Properties - Default values */
+:host {
+  --header-height: 80px;
+  --navigation-height: 55px;
+  --breadcrumb-height: 40px;
+  --screen-name-height: 70px;
+  --action-area-height: 80px;
+  --footer-height: 75px;
+  --title-bar-height: 73px;
+  --main-content-height: auto;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Main Layout Container */
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Header Area - Fixed height */
+.layout-header {
+  height: var(--header-height);
+  min-height: var(--header-height);
+  max-height: var(--header-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Global Navigation Area - Fixed height */
+.layout-navigation {
+  height: var(--navigation-height);
+  min-height: var(--navigation-height);
+  max-height: var(--navigation-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Breadcrumb Area - Fixed height */
+.layout-breadcrumb {
+  height: var(--breadcrumb-height);
+  min-height: var(--breadcrumb-height);
+  max-height: var(--breadcrumb-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Main Content Area - Flexible height with calculated height */
+.layout-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  /* Use calculated height when available, fallback to flex: 1 */
+  height: var(--main-content-height, auto);
+  min-height: 0; /* Allow shrinking below content size */
+}
+
+/* Screen Name Display Area - Fixed height */
+.screen-name-area {
+  height: var(--screen-name-height);
+  min-height: var(--screen-name-height);
+  max-height: var(--screen-name-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Action Button Area - Fixed height */
+.action-area {
+  height: var(--action-area-height);
+  min-height: var(--action-area-height);
+  max-height: var(--action-area-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Content Area - Fills remaining space with scroll */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Footer Area - Fixed height */
+.layout-footer {
+  height: var(--footer-height);
+  min-height: var(--footer-height);
+  max-height: var(--footer-height);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}

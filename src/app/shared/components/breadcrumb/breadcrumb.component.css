@@ -1,0 +1,63 @@
+/**
+ * BreadcrumbComponent styles
+ * Implements fixed-height breadcrumb area (40px) per Requirements 3.1, 3.2, 3.3
+ * Uses PrimeNG Breadcrumb component with custom styling
+ */
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
+  background-color: var(--breadcrumb-bg-color, #fafafa);
+  border-bottom: 1px solid var(--breadcrumb-border-color, #e0e0e0);
+  box-sizing: border-box;
+}
+
+/* PrimeNG Breadcrumb customization */
+::ng-deep .breadcrumb-primeng {
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+::ng-deep .breadcrumb-primeng .p-breadcrumb-list {
+  margin: 0;
+  padding: 0;
+}
+
+::ng-deep .breadcrumb-primeng .p-menuitem-link {
+  color: var(--breadcrumb-link-color, #1976d2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+::ng-deep .breadcrumb-primeng .p-menuitem-link:hover {
+  background-color: var(--breadcrumb-hover-bg-color, #e3f2fd);
+  color: var(--breadcrumb-link-hover-color, #1565c0);
+}
+
+::ng-deep .breadcrumb-primeng .p-menuitem-link:focus {
+  outline: 2px solid var(--focus-color, #1976d2);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+::ng-deep .breadcrumb-primeng .breadcrumb-current .p-menuitem-text {
+  color: var(--breadcrumb-current-color, #666666);
+  font-weight: 500;
+}
+
+::ng-deep .breadcrumb-primeng .p-breadcrumb-chevron {
+  color: var(--breadcrumb-separator-color, #999999);
+}

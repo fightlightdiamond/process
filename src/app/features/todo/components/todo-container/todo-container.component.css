@@ -3,9 +3,9 @@
    =========================================== */
 :host {
   display: block;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* ===========================================
@@ -20,18 +20,9 @@
    Loading Container
    =========================================== */
 .loading-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
   justify-content: center;
   padding: 2rem;
   gap: 1rem;
@@ -51,7 +42,6 @@
    PrimeNG Card Styling
    =========================================== */
 ::ng-deep .todo-card {
-  -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
   overflow: hidden;
@@ -71,18 +61,11 @@
    PrimeNG Button Styling
    =========================================== */
 ::ng-deep .p-button.p-button-success {
-  /* Cross-browser gradient */
-  background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background: -moz-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background: -o-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
 }
 
 ::ng-deep .p-button.p-button-success:hover {
-  background: -webkit-linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
-  background: -moz-linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
-  background: -o-linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
   background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
 }
 
@@ -91,39 +74,5 @@
    =========================================== */
 ::ng-deep .p-inputtext:focus {
   border-color: #667eea;
-  -webkit-box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
-}
-
-/* ===========================================
-   Mobile Responsive
-   =========================================== */
-@media screen and (max-width: 768px) {
-  :host {
-    max-width: 100%;
-    padding: 0 0.5rem;
-  }
-
-  ::ng-deep .todo-card {
-    border-radius: 8px;
-  }
-
-  ::ng-deep .todo-card .p-card-title {
-    font-size: 1.25rem;
-  }
-
-  ::ng-deep .todo-card .p-card-body {
-    padding: 1rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .loading-container {
-    padding: 1.5rem;
-  }
-
-  ::ng-deep .loading-spinner {
-    width: 40px;
-    height: 40px;
-  }
 }

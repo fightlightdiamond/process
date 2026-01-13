@@ -1,0 +1,52 @@
+/* ===========================================
+   Grid System PrimeFlex Overrides
+   =========================================== */
+
+/* Override PrimeFlex gutter spacing to use our custom --grid-gutter variable */
+.grid {
+  margin-right: calc(var(--grid-gutter) / -2);
+  margin-left: calc(var(--grid-gutter) / -2);
+}
+
+.grid > [class*="col"] {
+  padding-right: calc(var(--grid-gutter) / 2);
+  padding-left: calc(var(--grid-gutter) / 2);
+}
+
+/* Custom grid container styles */
+.grid-container {
+  width: 100%;
+  max-width: calc(100% - var(--grid-margin) * 2);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
+}
+
+/* Additional PrimeFlex overrides for consistent spacing */
+.p-grid {
+  margin-right: calc(var(--grid-gutter) / -2);
+  margin-left: calc(var(--grid-gutter) / -2);
+}
+
+.p-grid > [class*="p-col"] {
+  padding-right: calc(var(--grid-gutter) / 2);
+  padding-left: calc(var(--grid-gutter) / 2);
+}
+
+/* Ensure no margin collapse issues */
+.grid-container .grid:first-child {
+  margin-top: 0;
+}
+
+.grid-container .grid:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive container adjustments */
+@media (max-width: 576px) {
+  .grid-container {
+    padding-left: calc(var(--grid-margin) / 2);
+    padding-right: calc(var(--grid-margin) / 2);
+  }
+}

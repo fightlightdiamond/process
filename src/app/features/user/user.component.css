@@ -1,0 +1,44 @@
+.user-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.user-page h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.user-page p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.user-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.user-card h3 {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.user-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.user-card li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666;
+}
+
+.user-card li:last-child {
+  border-bottom: none;
+}

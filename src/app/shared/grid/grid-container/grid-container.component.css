@@ -1,0 +1,14 @@
+/* Grid Container Component Styles
+ * Requirements 1.1: Left and right margins of 48px fixed
+ * Requirements 1.2: Center content horizontally within the viewport
+ */
+
+.grid-container {
+  width: 100%;
+  max-width: calc(100% - var(--grid-margin) * 2);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
+  box-sizing: border-box;
+}

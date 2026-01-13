@@ -1,0 +1,61 @@
+/**
+ * HeaderComponent styles
+ * Implements fixed-height header area (80px) per Requirements 1.1, 1.2, 1.3
+ * Uses PrimeNG Toolbar with custom styling
+ */
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* PrimeNG Toolbar customization */
+::ng-deep .header-toolbar {
+  height: 100%;
+  background-color: var(--header-bg-color, #ffffff);
+  border: none;
+  border-bottom: 1px solid var(--header-border-color, #e0e0e0);
+  border-radius: 0;
+  padding: 0 16px;
+}
+
+::ng-deep .header-toolbar .p-toolbar-group-start,
+::ng-deep .header-toolbar .p-toolbar-group-end {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.header-brand:hover {
+  background-color: var(--header-brand-hover-bg, rgba(0, 0, 0, 0.04));
+}
+
+.header-brand:focus {
+  outline: 2px solid var(--focus-color, #1976d2);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--header-title-color, #333333);
+  line-height: 1.2;
+  margin: 0;
+}

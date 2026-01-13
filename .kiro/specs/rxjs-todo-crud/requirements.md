@@ -2,14 +2,19 @@
 
 ## Introduction
 
-Một ứng dụng CRUD Todo đơn giản sử dụng RxJS để quản lý state trong Angular. Ứng dụng cho phép người dùng tạo, đọc, cập nhật và xóa các todo items với reactive state management.
+Một ứng dụng CRUD Todo toàn diện sử dụng RxJS và Redux pattern để quản lý state trong Angular. Ứng dụng cung cấp reactive state management với API integration, error handling, loading states, và validation logic hoàn chỉnh.
 
 ## Glossary
 
-- **Todo_Service**: Service quản lý state của todos sử dụng RxJS BehaviorSubject
-- **Todo_Item**: Một đối tượng todo với id, title, và completed status
-- **Todo_List_Component**: Component hiển thị danh sách todos
-- **Todo_Form**: Form để thêm hoặc chỉnh sửa todo
+- **Todo_Facade**: Facade pattern service cung cấp simplified API cho components
+- **Todo_Store**: Redux-like store sử dụng BehaviorSubject để quản lý state
+- **Todo_Reducer**: Pure function xử lý state transitions
+- **Todo_Effects**: Side effects handler cho API calls
+- **Todo_Actions**: Redux-style action creators
+- **Todo_Item**: Đối tượng todo với id (string), title (string), và completed (boolean)
+- **Todo_State**: State object chứa todos array, loading boolean, và error string
+- **Todo_Container**: Smart component kết nối với store
+- **Todo_API_Service**: Service xử lý HTTP requests tới backend
 
 ## Requirements
 

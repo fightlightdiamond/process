@@ -17,18 +17,9 @@ describe("AppComponent", () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'RxJS Todo App' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual("RxJS Todo App");
-  });
-
-  it("should render title", () => {
+  it("should render without errors", () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector("h1")?.textContent).toContain(
-      "RxJS Todo App"
-    );
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

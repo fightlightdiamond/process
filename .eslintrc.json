@@ -1,12 +1,19 @@
 {
   "root": true,
   "ignorePatterns": [
-    "projects/**/*"
+    "projects/**/*",
+    "dist/**/*",
+    "coverage/**/*",
+    "node_modules/**/*",
+    "tools/**/*.js"
   ],
   "overrides": [
     {
       "files": [
         "*.ts"
+      ],
+      "excludedFiles": [
+        "*.spec.ts"
       ],
       "extends": [
         "eslint:recommended",
@@ -90,6 +97,24 @@
         "@angular-eslint/use-injectable-provided-in": "error",
         "@angular-eslint/no-forward-ref": "warn",
         "@angular-eslint/relative-url-prefix": "error"
+      }
+    },
+    {
+      "files": [
+        "*.spec.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/component-selector": "off",
+        "@angular-eslint/component-max-inline-declarations": "off",
+        "@angular-eslint/use-component-selector": "off",
+        "@angular-eslint/prefer-on-push-component-change-detection": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     },
     {

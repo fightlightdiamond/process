@@ -20,6 +20,7 @@ import { Todo } from "../../models";
 import { TodoFacade } from "../../store";
 import { TodoFormComponent } from "../todo-form/todo-form.component";
 import { TodoListComponent } from "../todo-list/todo-list.component";
+import { GridModule } from "../../../../shared/grid/grid.module";
 
 /**
  * TodoContainerComponent - Container/Smart Component
@@ -43,6 +44,7 @@ import { TodoListComponent } from "../todo-list/todo-list.component";
     CardModule,
     TodoFormComponent,
     TodoListComponent,
+    GridModule,
   ],
   templateUrl: "./todo-container.component.html",
   styleUrl: "./todo-container.component.css",

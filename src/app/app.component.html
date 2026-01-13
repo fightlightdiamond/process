@@ -1,8 +1,52 @@
-<div class="app-container">
-  <header class="app-header">
-    <h1>{{ title }}</h1>
-  </header>
-  <main class="app-main">
-    <router-outlet />
-  </main>
-</div>
+<app-page-layout
+  [showBreadcrumb]="(layoutConfig$ | async)?.showBreadcrumb ?? true"
+  [showActionArea]="(layoutConfig$ | async)?.showActionArea ?? false"
+  [showScreenName]="false"
+>
+  <!-- Header Area -->
+  <app-header
+    header
+    [title]="(layoutConfig$ | async)?.title ?? 'Application'"
+    logoUrl="assets/logo.png"
+    (logoClick)="onLogoClick()"
+  ></app-header>
+
+  <!-- Navigation Area -->
+  <app-navigation
+    navigation
+    [items]="(layoutConfig$ | async)?.navItems ?? []"
+    activeRoute="/"
+    (navigate)="onNavigate($event)"
+  ></app-navigation>
+
+  <!-- Breadcrumb Area -->
+  <app-breadcrumb
+    breadcrumb
+    [items]="(layoutConfig$ | async)?.breadcrumbItems ?? []"
+    (navigate)="onBreadcrumbNavigate($event)"
+  ></app-breadcrumb>
+
+  <!-- Screen Name Area - Hidden to save space -->
+  <!-- <div screenName class="screen-name">
+    <h1>{{ (layoutConfig$ | async)?.title ?? "Application" }}</h1>
+  </div> -->
+
+  <!-- Main Content Area with Grid System -->
+  <div content class="main-content">
+    <app-grid-container>
+      <router-outlet></router-outlet>
+    </app-grid-container>
+  </div>
+
+  <!-- Footer Area -->
+  <app-footer
+    footer
+    [copyright]="
+      '© ' +
+      currentYear +
+      ' ' +
+      ((layoutConfig$ | async)?.title ?? 'Application')
+    "
+    [links]="(layoutConfig$ | async)?.footerLinks ?? []"
+  ></app-footer>
+</app-page-layout>

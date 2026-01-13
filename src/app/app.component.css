@@ -1,65 +1,55 @@
 /* ===========================================
-   App Container - Main Layout
+   App Component - Page Layout Styles
    =========================================== */
-.app-container {
-  min-height: 100vh;
-  /* Cross-browser gradient */
-  background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background: -moz-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background: -o-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+/* Screen Name Area */
+.screen-name {
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding-bottom: 2rem;
-}
-
-/* ===========================================
-   App Header - Responsive Typography
-   =========================================== */
-.app-header {
-  text-align: center;
-  padding: 2rem 1rem;
   color: white;
+  height: 100%;
 }
 
-.app-header h1 {
+.screen-name h1 {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Main Content Area */
+.main-content {
+  max-width: none;
+  margin: 0;
+  padding: 1.5rem 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
 /* Tablet */
 @media screen and (max-width: 768px) {
-  .app-header h1 {
-    font-size: 2rem;
+  .screen-name {
+    padding: 0 1rem;
+  }
+
+  .screen-name h1 {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    padding: 1rem 0;
   }
 }
 
 /* Mobile */
 @media screen and (max-width: 480px) {
-  .app-header {
-    padding: 1.5rem 1rem;
+  .screen-name h1 {
+    font-size: 1.25rem;
   }
 
-  .app-header h1 {
-    font-size: 1.75rem;
-  }
-}
-
-/* ===========================================
-   App Main - Responsive Container
-   =========================================== */
-.app-main {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  /* Ensure content doesn't touch edges on mobile */
-  width: 100%;
-}
-
-/* Tablet and below */
-@media screen and (max-width: 768px) {
-  .app-main {
-    max-width: 100%;
-    padding: 0 0.75rem;
+  .main-content {
+    padding: 0.75rem 0;
   }
 }

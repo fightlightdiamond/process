@@ -1,0 +1,21 @@
+/* Grid Row Component Styles
+ * Requirements 4.3: Provide utility classes for vertical and horizontal alignment
+ * Uses PrimeFlex grid classes with custom gutter override
+ */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Override PrimeFlex gutter with CSS variable */
+:host ::ng-deep .grid {
+  margin-right: calc(var(--grid-gutter, 24px) / -2);
+  margin-left: calc(var(--grid-gutter, 24px) / -2);
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .grid > [class*="col"] {
+  padding-right: calc(var(--grid-gutter, 24px) / 2);
+  padding-left: calc(var(--grid-gutter, 24px) / 2);
+}

@@ -1,0 +1,26 @@
+/* ===========================================
+   Grid System CSS Variables
+   =========================================== */
+
+:root {
+  /* Grid System Core Variables */
+  --grid-margin: 48px;
+  --grid-gutter: 24px;
+  --grid-columns: 12;
+
+  /* Responsive Breakpoints */
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+
+  /* Calculated Values (for reference) */
+  /* At 1366px viewport:
+   * Content area: 1366 - (48 * 2) = 1270px
+   * Total gutters: 24 * 11 = 264px
+   * Total column space: 1270 - 264 = 1006px
+   * Column width: 1006 / 12 ≈ 84px
+   */
+}

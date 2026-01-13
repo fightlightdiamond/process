@@ -1,0 +1,22 @@
+<p-toolbar styleClass="footer-toolbar">
+  <div class="p-toolbar-group-start">
+    @if (copyright) {
+      <span class="footer-copyright">{{ copyright }}</span>
+    }
+  </div>
+  <div class="p-toolbar-group-end">
+    <div class="footer-links">
+      @for (link of links; track link.url) {
+        <button
+          pButton
+          type="button"
+          class="p-button-text footer-link"
+          (click)="onLinkClick(link.url)"
+          [attr.aria-label]="'Open ' + link.label + ' in new tab'"
+        >
+          {{ link.label }}
+        </button>
+      }
+    </div>
+  </div>
+</p-toolbar>
