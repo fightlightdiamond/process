@@ -38,7 +38,7 @@ export class UserEffects {
         this.apiService.getAll().pipe(
           map((users: User[]) => loadUsersSuccess(users)),
           catchError((error) =>
-            of(loadUsersFailure(error.error?.message || "Failed to load users"))
+            of(loadUsersFailure(error.message || "Failed to load users"))
           )
         )
       )
@@ -52,7 +52,7 @@ export class UserEffects {
         this.apiService.create(action.payload as Omit<User, "id">).pipe(
           map((user: User) => addUserSuccess(user)),
           catchError((error) =>
-            of(addUserFailure(error.error?.message || "Failed to add user"))
+            of(addUserFailure(error.message || "Failed to add user"))
           )
         )
       )
@@ -70,9 +70,7 @@ export class UserEffects {
         return this.apiService.update(id, updates).pipe(
           map((user: User) => updateUserSuccess(user)),
           catchError((error) =>
-            of(
-              updateUserFailure(error.error?.message || "Failed to update user")
-            )
+            of(updateUserFailure(error.message || "Failed to update user"))
           )
         );
       })
@@ -86,9 +84,7 @@ export class UserEffects {
         this.apiService.delete(action.payload as string).pipe(
           map(() => deleteUserSuccess(action.payload as string)),
           catchError((error) =>
-            of(
-              deleteUserFailure(error.error?.message || "Failed to delete user")
-            )
+            of(deleteUserFailure(error.message || "Failed to delete user"))
           )
         )
       )
