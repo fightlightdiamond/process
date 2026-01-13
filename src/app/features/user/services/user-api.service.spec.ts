@@ -94,7 +94,7 @@ describe("UserApiService", () => {
     service.getAll().subscribe(
       () => fail("should have failed"),
       (error) => {
-        expect(error.status).toBe(500);
+        expect(error.message).toContain("Lỗi server: 500");
       }
     );
 
@@ -108,7 +108,7 @@ describe("UserApiService", () => {
     service.create(newUserData).subscribe(
       () => fail("should have failed"),
       (error) => {
-        expect(error.status).toBe(400);
+        expect(error.message).toContain("Lỗi server: 400");
       }
     );
 
@@ -120,7 +120,7 @@ describe("UserApiService", () => {
     service.update("1", { name: "Updated" }).subscribe(
       () => fail("should have failed"),
       (error) => {
-        expect(error.status).toBe(404);
+        expect(error.message).toContain("Dữ liệu không tìm thấy");
       }
     );
 
@@ -132,7 +132,7 @@ describe("UserApiService", () => {
     service.delete("1").subscribe(
       () => fail("should have failed"),
       (error) => {
-        expect(error.status).toBe(404);
+        expect(error.message).toContain("Dữ liệu không tìm thấy");
       }
     );
 
