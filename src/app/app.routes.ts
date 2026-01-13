@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: "users",
-    loadComponent: () =>
-      import("./features/user/user.component").then((m) => m.UserComponent),
+    loadChildren: () =>
+      import("./features/user/user.routes").then((m) => m.USER_ROUTES),
   },
 ];

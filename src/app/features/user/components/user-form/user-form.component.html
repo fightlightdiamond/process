@@ -1,0 +1,63 @@
+<p-card [header]="title">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Tên <span class="required">*</span></label>
+      <input
+        pInputText
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Nhập tên user"
+        class="w-full"
+      />
+      <small *ngIf="nameError; else noNameError" class="text-red-500">
+        {{ nameError }}
+      </small>
+      <ng-template #noNameError></ng-template>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email <span class="required">*</span></label>
+      <input
+        pInputText
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Nhập email"
+        class="w-full"
+      />
+      <small *ngIf="emailError; else noEmailError" class="text-red-500">
+        {{ emailError }}
+      </small>
+      <ng-template #noEmailError></ng-template>
+    </div>
+
+    <div class="form-group">
+      <label for="avatar">Avatar</label>
+      <input
+        pInputText
+        id="avatar"
+        type="text"
+        formControlName="avatar"
+        placeholder="URL ảnh đại diện"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        pButton
+        type="submit"
+        label="Lưu"
+        [disabled]="!form.valid"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Hủy"
+        class="p-button-secondary"
+        (click)="onCancel()"
+      ></button>
+    </div>
+  </form>
+</p-card>

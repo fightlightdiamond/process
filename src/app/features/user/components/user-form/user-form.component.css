@@ -1,0 +1,35 @@
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.required {
+  color: #f87171;
+}
+
+small {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+:host ::ng-deep {
+  .p-card {
+    margin: 1rem;
+  }
+
+  .p-inputtext {
+    width: 100%;
+  }
+}

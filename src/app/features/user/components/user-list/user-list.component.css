@@ -1,0 +1,14 @@
+.user-list {
+  padding: 1rem;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+:host ::ng-deep {
+  .p-datatable .p-datatable-thead > tr > th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+}

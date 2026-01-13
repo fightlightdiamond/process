@@ -1,0 +1,36 @@
+<div class="user-container">
+  <p-card header="Quản Lý User">
+    <div class="card-header">
+      <button
+        pButton
+        type="button"
+        label="+ Thêm User"
+        (click)="onOpenCreateForm()"
+        class="p-button-success"
+      ></button>
+    </div>
+
+    <div *ngIf="loading$ | async" class="loading">
+      <p>Đang tải dữ liệu...</p>
+    </div>
+
+    <div *ngIf="error$ | async as error" class="error">
+      <p>Lỗi: {{ error }}</p>
+    </div>
+
+    <app-user-list
+      *ngIf="!showForm && (users$ | async) as users"
+      [users]="users"
+      (editUser)="onEditUser($event)"
+      (deleteUser)="onDeleteUser($event)"
+    ></app-user-list>
+
+    <app-user-form
+      *ngIf="showForm"
+      [mode]="formMode"
+      [initialUser]="selectedUser || undefined"
+      (userSubmit)="onFormSubmit($event)"
+      (formCancel)="onFormCancel()"
+    ></app-user-form>
+  </p-card>
+</div>

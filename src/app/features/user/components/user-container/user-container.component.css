@@ -1,0 +1,35 @@
+.user-container {
+  padding: 1rem;
+}
+
+.card-header {
+  margin-bottom: 1.5rem;
+}
+
+.loading,
+.error {
+  padding: 1rem;
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+:host ::ng-deep {
+  .p-card {
+    margin: 0;
+  }
+
+  .p-button-success {
+    margin-bottom: 1rem;
+  }
+}
