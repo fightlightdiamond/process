@@ -1,1 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
 npx lint-staged
+
+# Run tests for changed user feature
+if git diff --cached --name-only | grep -q "src/app/features/user"; then
+  echo "🧪 Running user feature tests..."
+  npm test -- --include="**/user/**/*.spec.ts" --watch=false
+  
+  if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Commit aborted."
+    exit 1
+  fi
+fi
+
+echo "✅ All checks passed!"
