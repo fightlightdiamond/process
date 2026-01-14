@@ -284,15 +284,25 @@ describe("Todo Effects", () => {
     }));
 
     it("Property 5: Effects dispatch correct actions on API response - UPDATE_TODO success", fakeAsync(() => {
+      // Generator for valid updates that will pass validation
+      const validUpdatesArbitrary = fc.record({
+        // Only generate valid titles (non-empty after trim, no <> characters)
+        title: fc.option(
+          fc
+            .string({ minLength: 1, maxLength: 50 })
+            .filter(
+              (s) => s.trim().length > 0 && !s.includes("<") && !s.includes(">")
+            )
+            .map((s) => s.trim()), // Ensure trimmed
+          { nil: undefined }
+        ),
+        completed: fc.option(fc.boolean(), { nil: undefined }),
+      });
+
       fc.assert(
         fc.property(
           validIdArbitrary,
-          fc.record({
-            title: fc.option(fc.string({ minLength: 1, maxLength: 50 }), {
-              nil: undefined,
-            }),
-            completed: fc.option(fc.boolean(), { nil: undefined }),
-          }),
+          validUpdatesArbitrary,
           todoArbitrary,
           (id: string, updates: Partial<Todo>, responseTodo: Todo) => {
             dispatchedActions = [];
@@ -322,21 +332,25 @@ describe("Todo Effects", () => {
     }));
 
     it("Property 5: Effects dispatch correct actions on API response - UPDATE_TODO failure", fakeAsync(() => {
+      // Generator for valid updates that will pass validation
+      const validUpdatesArbitrary = fc.record({
+        // Only generate valid titles (non-empty after trim, no <> characters)
+        title: fc.option(
+          fc
+            .string({ minLength: 1, maxLength: 50 })
+            .filter(
+              (s) => s.trim().length > 0 && !s.includes("<") && !s.includes(">")
+            )
+            .map((s) => s.trim()), // Ensure trimmed
+          { nil: undefined }
+        ),
+        completed: fc.option(fc.boolean(), { nil: undefined }),
+      });
+
       fc.assert(
         fc.property(
           validIdArbitrary,
-          fc.record({
-            // Only generate valid titles to avoid validation errors
-            title: fc.option(
-              fc
-                .string({ minLength: 1, maxLength: 50 })
-                .filter((s) => s.trim().length > 0),
-              {
-                nil: undefined,
-              }
-            ),
-            completed: fc.option(fc.boolean(), { nil: undefined }),
-          }),
+          validUpdatesArbitrary,
           fc.string({ minLength: 1, maxLength: 50 }),
           (id: string, updates: Partial<Todo>, errorMessage: string) => {
             dispatchedActions = [];
