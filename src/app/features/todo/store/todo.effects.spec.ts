@@ -326,9 +326,15 @@ describe("Todo Effects", () => {
         fc.property(
           validIdArbitrary,
           fc.record({
-            title: fc.option(fc.string({ minLength: 1, maxLength: 50 }), {
-              nil: undefined,
-            }),
+            // Only generate valid titles to avoid validation errors
+            title: fc.option(
+              fc
+                .string({ minLength: 1, maxLength: 50 })
+                .filter((s) => s.trim().length > 0),
+              {
+                nil: undefined,
+              }
+            ),
             completed: fc.option(fc.boolean(), { nil: undefined }),
           }),
           fc.string({ minLength: 1, maxLength: 50 }),
