@@ -11,6 +11,10 @@ import { ButtonModule } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { User } from "../../models/user.model";
+import {
+  USER_LIST_CONFIRM_DELETE_MESSAGE,
+  USER_LIST_CONFIRM_DELETE_ICON,
+} from "../../constants";
 
 @Component({
   selector: "app-user-list",

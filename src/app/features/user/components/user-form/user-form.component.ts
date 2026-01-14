@@ -19,6 +19,14 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { FileUploadModule } from "primeng/fileupload";
 import { CardModule } from "primeng/card";
 import { User } from "../../models/user.model";
+import {
+  USER_FORM_TITLE_CREATE,
+  USER_FORM_TITLE_EDIT,
+  USER_FORM_ERROR_NAME_REQUIRED,
+  USER_FORM_ERROR_NAME_MIN_LENGTH,
+  USER_FORM_ERROR_EMAIL_REQUIRED,
+  USER_FORM_ERROR_EMAIL_INVALID,
+} from "../../constants";
 
 @Component({
   selector: "app-user-form",
@@ -91,20 +99,22 @@ export class UserFormComponent implements OnInit {
   }
 
   get title(): string {
-    return this.mode === "create" ? "Thêm User Mới" : "Sửa Thông Tin User";
+    return this.mode === "create"
+      ? USER_FORM_TITLE_CREATE
+      : USER_FORM_TITLE_EDIT;
   }
 
   getNameError(): string | null {
     const control = this.form.get("name");
-    if (control?.hasError("required")) return "Tên là bắt buộc";
-    if (control?.hasError("minlength")) return "Tên phải tối thiểu 2 ký tự";
+    if (control?.hasError("required")) return USER_FORM_ERROR_NAME_REQUIRED;
+    if (control?.hasError("minlength")) return USER_FORM_ERROR_NAME_MIN_LENGTH;
     return null;
   }
 
   getEmailError(): string | null {
     const control = this.form.get("email");
-    if (control?.hasError("required")) return "Email là bắt buộc";
-    if (control?.hasError("email")) return "Email không hợp lệ";
+    if (control?.hasError("required")) return USER_FORM_ERROR_EMAIL_REQUIRED;
+    if (control?.hasError("email")) return USER_FORM_ERROR_EMAIL_INVALID;
     return null;
   }
 }
