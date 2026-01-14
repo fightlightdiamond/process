@@ -31,8 +31,8 @@ export class UserListComponent {
   confirmDelete(event: Event, user: User) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: `Bạn chắc chắn muốn xóa user "${user.name}"?`,
-      icon: "pi pi-exclamation-triangle",
+      message: USER_LIST_CONFIRM_DELETE_MESSAGE(user.name),
+      icon: USER_LIST_CONFIRM_DELETE_ICON,
       accept: () => {
         this.deleteUser.emit(user);
       },

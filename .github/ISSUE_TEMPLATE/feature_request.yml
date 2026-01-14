@@ -1,0 +1,81 @@
+name: Feature Request
+description: Suggest a new feature
+title: "[FEATURE] "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Help us understand your idea.
+
+  - type: checkboxes
+    id: before_submit
+    attributes:
+      label: Before submitting
+      description: Please check if this feature already exists
+      options:
+        - label: I have searched the existing issues
+          required: true
+        - label: This is a new feature request
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Clear description of the feature
+      placeholder: "I would like to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why do you need this feature
+      placeholder: "This would help because..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this feature work
+      placeholder: "The feature should..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Other solutions or workarounds
+      placeholder: "Other approaches..."
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: When is this feature complete
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+
+  - type: textarea
+    id: implementation_notes
+    attributes:
+      label: Implementation Notes
+      description: Technical considerations
+      placeholder: "Implementation details..."
+
+  - type: checkboxes
+    id: acknowledge
+    attributes:
+      label: Acknowledgment
+      options:
+        - label: I understand this is a request and may not be implemented
+          required: true

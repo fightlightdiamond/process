@@ -1,0 +1,108 @@
+name: Bug Report
+description: Report a bug to help us improve
+title: "[BUG] "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please provide as much detail as possible.
+
+  - type: checkboxes
+    id: before_submit
+    attributes:
+      label: Before submitting
+      description: Please check if this issue already exists
+      options:
+        - label: I have searched the existing issues
+          required: true
+        - label: This is not a duplicate
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Clear description of what the bug is
+      placeholder: "The bug is..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead
+      placeholder: "Expected to see..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happens
+      placeholder: "Actually got..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (App crashes, data loss)
+        - High (Feature doesn't work at all)
+        - Medium (Feature partially works)
+        - Low (Minor issue, workaround exists)
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: Add screenshots or videos if applicable
+      placeholder: "Drag and drop images here"
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: System information
+      placeholder: |
+        - OS: Windows 11
+        - Node: 18.0.0
+        - npm: 9.0.0
+        - Browser: Chrome 120
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: "Additional info..."
+
+  - type: checkboxes
+    id: acknowledge
+    attributes:
+      label: Acknowledgment
+      options:
+        - label: I understand the maintainers will address this when they can
+          required: true
