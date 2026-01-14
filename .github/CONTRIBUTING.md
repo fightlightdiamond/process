@@ -322,6 +322,136 @@ npm test -- --watch=false
 npm test -- --watch=false --code-coverage
 ```
 
+## Husky Quality Gates
+
+### What is Husky?
+
+Husky automatically runs quality checks before commits and pushes, preventing bad code from entering the repository.
+
+### Pre-Commit Hook
+
+**What it does:**
+1. Runs `lint-staged` - ESLint + Prettier on staged files
+2. If user feature files changed, runs user feature tests
+
+**Example:**
+```bash
+$ git commit -m "feat(user): add user delete"
+
+→ lint-staged: Linting and formatting files...
+→ ESLint issues fixed automatically
+→ Prettier formatted code
+🧪 Running user feature tests...
+→ 77 tests passing
+✅ All checks passed! Commit created.
+```
+
+**If checks fail:**
+```bash
+$ git commit -m "feat(user): add invalid code"
+
+→ lint-staged failed
+❌ Tests failed. Commit aborted.
+→ Fix errors and try again
+```
+
+### Pre-Push Hook
+
+**What it does:**
+Runs full test suite with Chrome headless before allowing push to GitHub
+
+**Purpose:**
+Ensures all tests pass before code reaches remote repository
+
+**Example:**
+```bash
+$ git push origin feature/user-profile
+
+🔍 Running full test suite before push...
+→ Running 77 user tests...
+→ Running all other tests...
+✅ All tests passed! Ready to push.
+
+→ Pushing to remote...
+```
+
+**If tests fail:**
+```bash
+$ git push origin feature/user-profile
+
+🔍 Running full test suite before push...
+❌ Tests failed. Push aborted.
+→ Fix test failures locally
+→ Commit changes
+→ Try push again
+```
+
+### Commit Message Hook
+
+**What it does:**
+Validates commit message follows Conventional Commits format
+
+**Valid formats:**
+```
+feat(user): add new feature
+fix(todo): fix bug
+test: improve tests
+docs: update documentation
+refactor: improve code
+```
+
+**Invalid formats:**
+```
+added user stuff        ❌ Missing type
+user: did something     ❌ Invalid type
+feat user: something    ❌ Missing parentheses
+```
+
+### Bypassing Hooks (Not Recommended)
+
+In rare cases, you can bypass hooks:
+
+```bash
+# Skip all hooks
+git commit --no-verify
+
+# Skip only pre-commit hook
+git commit -m "..." --no-verify
+
+# Skip pre-push hook
+git push --no-verify
+```
+
+⚠️ **Warning:** Only use when absolutely necessary. Hooks exist to maintain code quality.
+
+### Troubleshooting Hooks
+
+**Hooks not running?**
+```bash
+# Reinstall Husky
+npm install husky --save-dev
+npx husky install
+```
+
+**Tests taking too long in pre-commit?**
+- Pre-commit only runs tests for changed files (user feature)
+- Full suite runs in pre-push hook
+- Or run `npm test -- --watch=false` locally before commit
+
+**Chrome not found for pre-push?**
+```bash
+# Install Chrome or use different browser
+npm test -- --watch=false --browsers=Firefox
+```
+
+**Permission denied when running hooks?**
+```bash
+# Make hooks executable
+chmod +x .husky/pre-commit
+chmod +x .husky/commit-msg
+chmod +x .husky/pre-push
+```
+
 ### Pull Request Process
 1. Create feature branch
 2. Make changes following guidelines
