@@ -3,6 +3,7 @@
 ## Project Overview
 
 This is an Angular Standalone Components project with RxJS state management, using:
+
 - **Framework**: Angular 18+ with Standalone Components
 - **State Management**: Custom Redux-like pattern (Actions, Reducers, Effects, Store, Facade)
 - **Styling**: PrimeNG components + custom CSS
@@ -80,17 +81,20 @@ Every feature has its own store with:
 ```typescript
 // store/feature.actions.ts
 export enum FeatureActionTypes {
-  LOAD = 'LOAD_FEATURES',
-  ADD = 'ADD_FEATURE',
-  UPDATE = 'UPDATE_FEATURE',
-  DELETE = 'DELETE_FEATURE',
+  LOAD = "LOAD_FEATURES",
+  ADD = "ADD_FEATURE",
+  UPDATE = "UPDATE_FEATURE",
+  DELETE = "DELETE_FEATURE",
   // ... + SUCCESS/FAILURE variants
 }
 
 export const loadFeatures = () => ({ type: FeatureActionTypes.LOAD });
 
 // store/feature.reducer.ts
-export function featureReducer(state: FeatureState, action: Action): FeatureState {
+export function featureReducer(
+  state: FeatureState,
+  action: Action
+): FeatureState {
   switch (action.type) {
     case FeatureActionTypes.LOAD:
       return { ...state, loading: true };
@@ -99,21 +103,21 @@ export function featureReducer(state: FeatureState, action: Action): FeatureStat
 }
 
 // store/feature.effects.ts
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class FeatureEffects {
   init(actions$: Subject<Action>, dispatch: (action: Action) => void) {
-    merge(this.loadEffect(actions$)).subscribe(action => 
-      action && dispatch(action)
+    merge(this.loadEffect(actions$)).subscribe(
+      (action) => action && dispatch(action)
     );
   }
-  
+
   private loadEffect(actions$) {
     return actions$.pipe(
-      filter(a => a.type === FeatureActionTypes.LOAD),
-      switchMap(() => 
+      filter((a) => a.type === FeatureActionTypes.LOAD),
+      switchMap(() =>
         this.apiService.getAll().pipe(
-          map(data => loadSuccess(data)),
-          catchError(error => of(loadFailure(error.message)))
+          map((data) => loadSuccess(data)),
+          catchError((error) => of(loadFailure(error.message)))
         )
       )
     );
@@ -121,28 +125,32 @@ export class FeatureEffects {
 }
 
 // store/feature.store.ts
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class FeatureStore {
   private state$ = new BehaviorSubject<FeatureState>(initialState);
-  
+
   features$ = this.state$.pipe(
-    map(s => s.features),
+    map((s) => s.features),
     distinctUntilChanged()
   );
-  loading$ = this.state$.pipe(map(s => s.loading));
-  
+  loading$ = this.state$.pipe(map((s) => s.loading));
+
   dispatch(action: Action) {
     this.state$.next(this.reducer(this.state$.value, action));
   }
 }
 
 // store/feature.facade.ts
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class FeatureFacade {
   features$ = this.store.features$;
-  
-  loadFeatures() { this.store.dispatch(loadFeatures()); }
-  addFeature(data) { this.store.dispatch(addFeature(data)); }
+
+  loadFeatures() {
+    this.store.dispatch(loadFeatures());
+  }
+  addFeature(data) {
+    this.store.dispatch(addFeature(data));
+  }
 }
 ```
 
@@ -166,6 +174,7 @@ export class FeatureListComponent {
 ```
 
 **Key Rules:**
+
 - Use `readonly` for @Input/@Output
 - Use OnPush change detection
 - Separate template/style files
@@ -198,6 +207,7 @@ onSubmit() {
 ## Naming Conventions
 
 ### Files
+
 - **Components**: `feature-list.component.ts`, `feature-list.component.html`, `feature-list.component.css`
 - **Services**: `feature.service.ts`, `feature-api.service.ts`
 - **Models**: `feature.model.ts`
@@ -205,6 +215,7 @@ onSubmit() {
 - **Tests**: `feature.component.spec.ts`, `feature.service.spec.ts`
 
 ### TypeScript
+
 - Classes: PascalCase (`UserComponent`, `UserService`)
 - Interfaces: PascalCase with suffix (`UserState`, `User`)
 - Functions: camelCase (`loadUsers()`, `saveUser()`)
@@ -213,6 +224,7 @@ onSubmit() {
 - Private: prefix with underscore (`_internalState`)
 
 ### CSS Classes
+
 - BEM style for custom CSS: `.feature__header`, `.feature__item--active`
 - PrimeNG prefix: `.p-button`, `.p-table`, `.p-card`
 - Utility classes: `.me-2` (margin-right), `.w-full` (width: 100%)
@@ -220,27 +232,29 @@ onSubmit() {
 ## Testing Strategy
 
 ### Unit Tests (Jasmine)
+
 - Test component inputs/outputs
 - Test service methods
 - Test store actions/reducers
 - Mock HttpClient with HttpTestingController
 
 ```typescript
-it('should emit itemSelect when item clicked', () => {
-  spyOn(component.itemSelect, 'emit');
-  const item = { id: '1', name: 'Test' };
-  
+it("should emit itemSelect when item clicked", () => {
+  spyOn(component.itemSelect, "emit");
+  const item = { id: "1", name: "Test" };
+
   component.itemSelect.emit(item);
-  
+
   expect(component.itemSelect.emit).toHaveBeenCalledWith(item);
 });
 ```
 
 ### Property-Based Tests (fast-check)
+
 Used in reducer & service tests for confidence:
 
 ```typescript
-it('should maintain user count', () => {
+it("should maintain user count", () => {
   fc.assert(
     fc.property(fc.array(userArbitrary), (users) => {
       const action = loadUsersSuccess(users);
@@ -253,6 +267,7 @@ it('should maintain user count', () => {
 ```
 
 ### Test Files Organization
+
 - `*.component.spec.ts` - Component tests (4-8 tests each)
 - `*.service.spec.ts` - Service tests with HttpTestingController
 - `*.reducer.spec.ts` - Reducer tests with property-based
@@ -286,7 +301,7 @@ it('should maintain user count', () => {
 
 5. **Performance**
    - Use OnPush change detection
-   - Use trackBy in *ngFor: `trackBy: (i, item) => item.id`
+   - Use trackBy in \*ngFor: `trackBy: (i, item) => item.id`
    - Unsubscribe properly (use async pipe when possible)
 
 6. **Testing**
@@ -298,28 +313,31 @@ it('should maintain user count', () => {
 ### DON'Ts ❌
 
 1. **Avoid mutable state**
+
    ```typescript
    // ❌ Wrong
    state.users.push(user);
-   
+
    // ✅ Right
    return { ...state, users: [...state.users, user] };
    ```
 
 2. **Avoid untyped values**
+
    ```typescript
    // ❌ Wrong
    const data: any = response;
-   
+
    // ✅ Right
    const data: User[] = response;
    ```
 
 3. **Avoid calling methods in templates**
+
    ```typescript
    // ❌ Wrong
    <div *ngIf="getError()">Error</div>
-   
+
    // ✅ Right
    <div *ngIf="error$ | async as error">{{ error }}</div>
    ```
@@ -330,12 +348,13 @@ it('should maintain user count', () => {
    - Move styles to separate files
 
 5. **Avoid nested subscriptions**
+
    ```typescript
    // ❌ Wrong
    this.service1.getAll().subscribe(data => {
      this.service2.update(data).subscribe(...);
    });
-   
+
    // ✅ Right
    this.service1.getAll().pipe(
      switchMap(data => this.service2.update(data))
@@ -352,18 +371,21 @@ it('should maintain user count', () => {
 **Base URL**: `http://localhost:3000`
 
 ### Todo Feature
+
 - `GET /todos` - List all todos
 - `POST /todos` - Create todo
 - `PUT /todos/:id` - Update todo
 - `DELETE /todos/:id` - Delete todo
 
 ### User Feature
+
 - `GET /users` - List all users
 - `POST /users` - Create user
 - `PUT /users/:id` - Update user
 - `DELETE /users/:id` - Delete user
 
 Error handling:
+
 - 404 Not Found → "Dữ liệu không tìm thấy"
 - 500 Server Error → "Lỗi server: 500"
 - Network error → "Không thể kết nối đến server"
@@ -387,6 +409,7 @@ npm run g:api-service -- --name=product
 ```
 
 This creates:
+
 - Feature directory structure
 - Models with interfaces
 - API service with CRUD
@@ -414,6 +437,7 @@ chore: Dependencies, configs
 ```
 
 **Rules:**
+
 - Lowercase subject line
 - Reference issue: `feat(todo): add filtering #123`
 - Use imperative mood: "add" not "added" or "adds"
@@ -422,11 +446,13 @@ chore: Dependencies, configs
 ## Pre-commit Hooks (Husky)
 
 Automatically runs:
+
 1. ESLint fix
 2. Prettier format
 3. Commit lint validation
 
 If failing:
+
 ```bash
 # Fix manually
 npm run lint:fix
@@ -452,6 +478,7 @@ git commit --no-verify
    - Pagination required?
 
 2. **Create structure**
+
    ```bash
    npm run g:feature -- --name=feature-name
    ```
@@ -471,15 +498,16 @@ git commit --no-verify
    - Write tests for @Input/@Output
 
 5. **Add routing**
+
    ```typescript
    // feature.routes.ts
    export const FEATURE_ROUTES: Routes = [{
      path: '',
      component: FeatureContainerComponent
    }];
-   
+
    // app.routes.ts
-   { path: 'feature', loadChildren: () => 
+   { path: 'feature', loadChildren: () =>
      import('./features/feature').then(m => m.FEATURE_ROUTES)
    }
    ```

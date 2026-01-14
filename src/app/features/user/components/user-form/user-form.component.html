@@ -50,6 +50,7 @@
         type="submit"
         label="Lưu"
         [disabled]="!form.valid"
+        aria-label="Lưu"
       ></button>
       <button
         pButton
@@ -57,6 +58,7 @@
         label="Hủy"
         class="p-button-secondary"
         (click)="onCancel()"
+        aria-label="Hủy"
       ></button>
     </div>
   </form>
