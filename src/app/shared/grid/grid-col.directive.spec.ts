@@ -3,6 +3,7 @@ import {
   Component,
   DebugElement,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { GridColDirective } from "./grid-col.directive";
@@ -31,6 +32,13 @@ class TestComponent {
   lg?: number;
   xl?: number;
   offset?: number;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  updateCol(value: number) {
+    this.col = value;
+    this.cdr.markForCheck();
+  }
 }
 
 describe("GridColDirective", () => {
@@ -103,21 +111,21 @@ describe("GridColDirective", () => {
 
   it("should validate column span to range [1, 12]", () => {
     // Test upper bound
-    component.col = 15;
+    component.updateCol(15);
     fixture.detectChanges();
     expect(directiveElement.nativeElement.classList.contains("col-12")).toBe(
       true
     );
 
     // Test lower bound
-    component.col = 0;
+    component.updateCol(0);
     fixture.detectChanges();
     expect(directiveElement.nativeElement.classList.contains("col-1")).toBe(
       true
     );
 
     // Test negative value
-    component.col = -5;
+    component.updateCol(-5);
     fixture.detectChanges();
     expect(directiveElement.nativeElement.classList.contains("col-1")).toBe(
       true
@@ -125,13 +133,13 @@ describe("GridColDirective", () => {
   });
 
   it("should update classes when inputs change", () => {
-    component.col = 6;
+    component.updateCol(6);
     fixture.detectChanges();
     expect(directiveElement.nativeElement.classList.contains("col-6")).toBe(
       true
     );
 
-    component.col = 8;
+    component.updateCol(8);
     fixture.detectChanges();
     expect(directiveElement.nativeElement.classList.contains("col-6")).toBe(
       false
